@@ -12,6 +12,11 @@ from pathlib import Path
 
 import pytest
 
+# The bundle preparation path goes through the official LeRobot API. CI installs the
+# `dev` and `ui` extras only (torch/lerobot are heavy), so this module is skipped there
+# instead of failing — consistent with the `ros2`/`vision` marker policy in CONTRIBUTING.md.
+pytest.importorskip("lerobot", reason="training bundle preparation requires lerobot==0.4.4")
+
 from embodied_dataops.errors import ApiError, ErrorCode  # noqa: E402
 from embodied_dataops.training.artifact import (  # noqa: E402
     BUNDLE_SCHEMA_VERSION,
