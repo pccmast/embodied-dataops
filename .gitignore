@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.venv-*/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local state
+.env
+var/
+.tmp/
+*.log
+.DS_Store
+
+# Agent workspace state (memory, local notes) - not project source
+.workbuddy/
+
+# Generated artifacts (kept only for accepted deliverables under artifacts/)
+fixtures/generate/
+artifacts/test-results/*.log
+artifacts/benchmarks/raw/
+
+# Never commit public datasets or model weights
+*.pt
+*.safetensors
+public-data/

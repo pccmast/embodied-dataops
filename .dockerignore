@@ -1,0 +1,59 @@
+# Build context filter (SPEC deployment hygiene).
+#
+# Without this file the root context ships the local virtualenv, downloaded public
+# datasets, the object store, model weights and every report to the daemon on each
+# build: slow transfers, and credentials/data leaking into intermediate layers.
+
+# --- VCS / editor -----------------------------------------------------------
+.git
+.gitignore
+.github
+.idea
+.vscode
+
+# --- Python environments / caches -------------------------------------------
+.venv
+venv
+__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+*.egg-info
+build
+dist
+
+# --- Local runtime state ----------------------------------------------------
+var
+.tmp
+*.log
+.env
+.env.*
+!.env.example
+
+# --- Data, fixtures, datasets and model weights -----------------------------
+# Fixtures are generated inside the image/test run, never baked in.
+fixtures
+public-data
+data
+artifacts
+reports
+acceptance
+benchmarks
+*.parquet
+*.mp4
+*.mcap
+*.tar.gz
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# --- Docs / specification bundles (not needed at runtime) -------------------
+docs
+*.pdf
+Embodied_DataOps_V2_增量规格包
+Embodied_DataOps_V2.1_正式规格包
+
+# --- Tests are run from the source tree, not from an image ------------------
+tests

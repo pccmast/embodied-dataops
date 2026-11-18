@@ -1,0 +1,7 @@
+{
+  "data_origin": "synthetic",
+  "generator": "fixtures/generate_synthetic.py",
+  "notes": "synthetic fixture; not real robot capture",
+  "repo_id": "dataops/F01_good_lerobot",
+  "seed": 20261029
+}

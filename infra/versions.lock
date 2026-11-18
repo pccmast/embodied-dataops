@@ -1,0 +1,35 @@
+# Third-party runtime dependencies of Embodied DataOps.
+# Rule: every entry has an immutable tag / version. `latest` is forbidden.
+# Digests are filled in by scripts/pin_versions.sh (docker image inspect) and
+# must be refreshed only through an ADR when a dependency is upgraded.
+
+[python]
+version = "3.11.13"
+
+[images]
+postgres = "postgres:16.10-alpine"
+postgres_digest = "sha256:029660641a0cfc575b14f336ba448fb8a75fd595d42e1fa316b9fb4378742297"
+redis = "redis:7.4.5-alpine"
+redis_digest = "sha256:bb186d083732f669da90be8b0f975a37812b15e913465bb14d845db72a4e3e08"
+silo = "pgsty/silo:RELEASE.2026-10-26T00-00-00Z"  # MinIO-compatible community fork (MinIO upstream images discontinued)
+silo_digest = "sha256:7bb2aff6b89efe1cb1303c10fc21d579447434ed06649ac9ec05a5e2dbf30ad7"
+minio_client = "<removed: bucket is created by the application (S3Storage.ensure_bucket)>"
+prometheus = "prom/prometheus:v3.5.0"
+prometheus_digest = "sha256:63805ebb8d2b3920190daf1cb14a60871b16fd38bed42b857a3182bc621f4996"
+grafana = "grafana/grafana:12.2.0"
+grafana_digest = "sha256:74144189b38447facf737dfd0f3906e42e0776212bf575dc3334c3609183adf7"
+ros2_base = "ros:jazzy-ros-base"
+ros2_base_digest = "sha256:8eed0a4669bbf43ee331878a4c39bd8ebddea8e3312a58b4fae8edb14526b617"
+uv = "ghcr.io/astral-sh/uv:0.9.7"
+
+[python_packages]
+lerobot = "0.4.4"
+# exact resolution of every other Python dependency lives in uv.lock
+
+[model_weights]
+yolo11n = { source = "https://github.com/ultralytics/assets/releases", sha256_recorded_at_runtime = true }
+
+[digests]
+# pgsty/silo:RELEASE.2026-10-26T00-00-00Z = "sha256:7bb2aff6b89efe1cb1303c10fc21d579447434ed06649ac9ec05a5e2dbf30ad7"
+# Populated by `scripts/pin_versions.sh` on a machine with the images pulled:
+# postgres = "sha256:<digest>"

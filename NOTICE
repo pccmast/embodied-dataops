@@ -1,0 +1,42 @@
+Embodied DataOps
+Copyright (C) 2026 the Embodied DataOps contributors
+
+This program is free software: you can redistribute it and/or modify it under the
+terms of the GNU Affero General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with
+this program.  If not, see <https://www.gnu.org/licenses/>.
+
+--------------------------------------------------------------------------------
+Third-party components
+
+This repository does not vendor third-party source code or model weights. The
+authoritative, per-component list with obligations lives in docs/licenses.md; the
+notable ones are repeated here because they affect redistribution:
+
+* Ultralytics YOLO (Python package `ultralytics`, optional `vision` extra) —
+  AGPL-3.0. It is imported in-process when `DETECTOR=yolo` is selected. Running the
+  platform with `DETECTOR=fake` (the default for tests and the demo) does not use it.
+* YOLO11n weights (`yolo11n.pt`) — Ultralytics, AGPL-3.0. **Not** redistributed here;
+  scripts/run_yolo_real.py downloads them and records the observed SHA-256.
+* LeRobot (`lerobot==0.4.4`) — Apache-2.0, used through its official API.
+* PostgreSQL (PostgreSQL License), Redis 7.4 (RSALv2/SSPLv1), PGSTY Silo
+  (AGPL-3.0-or-later), Prometheus (Apache-2.0), Grafana (AGPL-3.0) — run as separate
+  services via docker-compose; no their code is linked into this application.
+* ROS 2 Jazzy base image — Apache-2.0 plus Ubuntu packages; used only by the optional
+  worker-ros2 container.
+* FFmpeg — installed from the distribution, not redistributed by this repository;
+  codec availability and licensing depend on that build.
+
+--------------------------------------------------------------------------------
+Data
+
+Fixtures under fixtures/ are generated deterministically by the scripts in the same
+directory; they are synthetic and labelled `data_origin=synthetic`. No public robot
+dataset bytes and no personal data are redistributed. Datasets fetched at runtime are
+described in docs/public-dataset-provenance.md and data/DATA_SOURCES_V21.yaml.

@@ -1,0 +1,7 @@
+{
+  "data_origin": "synthetic",
+  "generator": "fixtures/generate_synthetic.py",
+  "notes": "synthetic fixture; not real robot capture",
+  "repo_id": "dataops/F11_three_group",
+  "seed": 20261029
+}

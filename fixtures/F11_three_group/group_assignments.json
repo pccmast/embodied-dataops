@@ -1,0 +1,8 @@
+{
+  "assignments": {
+    "g_0": "train",
+    "g_1": "val",
+    "g_2": "test"
+  },
+  "schema_version": "training-group-assignments/1.0"
+}

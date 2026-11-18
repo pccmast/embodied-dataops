@@ -1,0 +1,17 @@
+{
+  "is_simulated": true,
+  "model_id": "demo-policy-v1",
+  "results": [
+    {
+      "scenario_key": "transparent_cup_low_light",
+      "successes": 12,
+      "trials": 30
+    },
+    {
+      "scenario_key": "opaque_cup_normal_light",
+      "successes": 27,
+      "trials": 30
+    }
+  ],
+  "schema_version": "evaluation/1.0"
+}

@@ -1,0 +1,149 @@
+# Embodied DataOps CI (Linux). Windows is a development host only; the UI image
+# is built here, never on the Windows developer machine (ADR-0010).
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "3.11"
+  UV_VERSION: "0.9.7"
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:16.10-alpine
+        env:
+          POSTGRES_USER: dataops
+          POSTGRES_PASSWORD: dataops
+          POSTGRES_DB: dataops_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U dataops -d dataops_test"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+      redis:
+        image: redis:7.4.5-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+      - run: uv python install ${{ env.PYTHON_VERSION }}
+      - run: uv sync --extra dev --extra ui
+      - name: Unit tests
+        env:
+          TEST_DATABASE_URL: postgresql+psycopg://dataops:dataops@localhost:5432/dataops_test
+          TEST_REDIS_URL: redis://localhost:6379/15
+        run: uv run pytest -m unit -q --junitxml=artifacts/test-results/unit.xml
+      - name: V2.1 offline unit tests
+        # No PostgreSQL, no network, no model: these must pass in every environment.
+        run: uv run pytest tests/v21 -q --junitxml=artifacts/test-results/v21-unit.xml
+      - name: Concurrency gate (two workers on real row locks)
+        # The release gate. `-m integration` also selects import/export/API suites,
+        # which says nothing about atomicity; this marker does, and it is fast.
+        env:
+          TEST_DATABASE_URL: postgresql+psycopg://dataops:dataops@localhost:5432/dataops_test
+          TEST_REDIS_URL: redis://localhost:6379/15
+        run: uv run pytest -m concurrency -q --junitxml=artifacts/test-results/concurrency.xml
+      - name: Integration tests (local object store + moto S3)
+        env:
+          TEST_DATABASE_URL: postgresql+psycopg://dataops:dataops@localhost:5432/dataops_test
+          TEST_REDIS_URL: redis://localhost:6379/15
+        run: uv run pytest -m "integration and not ros2 and not vision" -q --junitxml=artifacts/test-results/integration.xml
+      - name: Contract tests (official LeRobot 0.4.4)
+        env:
+          TEST_DATABASE_URL: postgresql+psycopg://dataops:dataops@localhost:5432/dataops_test
+          TEST_REDIS_URL: redis://localhost:6379/15
+        run: uv run pytest -m contract -q --junitxml=artifacts/test-results/contract.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: artifacts/test-results/
+
+  docker-build:
+    # The UI container image is built and smoke-tested here (never on Windows).
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build API image (no apt; uv from PyPI)
+        run: docker build -f infra/docker/api.Dockerfile -t dataops-api:ci .
+      - name: API container smoke (Python 3.11 + app import)
+        run: docker run --rm dataops-api:ci python -c "import embodied_dataops, fastapi, sqlalchemy; print('API_IMAGE_OK', embodied_dataops.__version__)"
+      - name: Build CPU worker image
+        run: docker build -f infra/docker/cpu_worker.Dockerfile -t dataops-worker-cpu:ci .
+      - name: Worker container smoke (ffmpeg from wheel + PyAV)
+        run: docker run --rm --entrypoint python dataops-worker-cpu:ci -c "import imageio_ffmpeg, av; print('WORKER_IMAGE_OK', imageio_ffmpeg.get_ffmpeg_exe())"
+      - name: Build UI image (Linux only; see ADR-0010)
+        run: docker build -f infra/docker/ui.Dockerfile -t dataops-ui:ci .
+      - name: UI container smoke (Streamlit import)
+        run: docker run --rm --entrypoint python dataops-ui:ci -c "import streamlit; print('UI_IMAGE_OK', streamlit.__version__)"
+      - name: Build ROS 2 Jazzy worker image (native rosbag2 + MCAP plugin)
+        run: |
+          docker build -f infra/docker/ros_worker.Dockerfile \
+            --build-arg PYPI_INDEX_URL=https://pypi.org/simple \
+            --build-arg UV_DEFAULT_INDEX=https://pypi.org/simple \
+            -t dataops-worker-ros2:ci .
+      - name: ROS container smoke (rosbag2_py import)
+        run: docker run --rm --entrypoint python3 dataops-worker-ros2:ci -c "import rosbag2_py, embodied_dataops; print('ROS_IMAGE_OK')"
+
+  acceptance:
+    needs: test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+      - run: uv python install ${{ env.PYTHON_VERSION }}
+      - run: uv sync --extra dev --extra ui
+      - name: Start PostgreSQL, Redis and PGSTY Silo (MinIO-compatible object store)
+        run: |
+          docker compose up -d db redis minio
+          for i in $(seq 1 40); do
+            if docker compose exec -T db pg_isready -U dataops -d dataops >/dev/null 2>&1 \
+               && docker compose exec -T redis redis-cli ping >/dev/null 2>&1 \
+               && curl -fsS http://localhost:9000/minio/health/ready >/dev/null; then break; fi
+            sleep 3
+          done
+      - name: Apply migrations + generate fixtures
+        env:
+          DATABASE_URL: postgresql+psycopg://dataops:dataops@localhost:5432/dataops
+          STORAGE_BACKEND: s3
+          S3_ENDPOINT_INTERNAL: http://localhost:9000
+          S3_ENDPOINT_PUBLIC: http://localhost:9000
+          S3_BUCKET: dataops
+          S3_ACCESS_KEY: dataops
+          S3_SECRET_KEY: dataops-secret
+        run: |
+          uv run alembic upgrade head
+          uv run python -m embodied_dataops.cli.main fixtures
+      - name: Acceptance suite (V1 AT matrix)
+        env:
+          TEST_DATABASE_URL: postgresql+psycopg://dataops:dataops@localhost:5432/dataops_test
+          TEST_REDIS_URL: redis://localhost:6379/15
+          STORAGE_BACKEND: local
+        # No `|| true`: the runner returns pytest's exit code, so a failing AT suite
+        # must fail this job.  "CI is green" was previously compatible with a red
+        # acceptance run because the code masked the status here.
+        run: uv run python -m embodied_dataops.cli.main acceptance
+      - name: Acceptance summary
+        if: always()
+        run: cat artifacts/test-results/summary.md || echo "no summary was produced"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: acceptance-evidence
+          path: artifacts/test-results/

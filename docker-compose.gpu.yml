@@ -1,0 +1,38 @@
+# GPU overlay for the vision worker (SPEC_V2.1 §7.1, OV-07).
+#
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml build worker-vision
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d worker-vision
+#
+# The base stack stays CPU-only on purpose: a `gpus:` reservation in the default file
+# makes `make up` fail on every machine without an NVIDIA runtime.  This overlay is
+# the only place a device is requested.
+#
+# Prerequisites (all of them, not just one):
+#   1. NVIDIA driver + nvidia-container-toolkit on the host, `docker run --gpus all`
+#      working;
+#   2. the image built with a CUDA torch wheel: pass
+#      `--build-arg TORCH_INDEX_URL=https://download.pytorch.org/whl/cu124`
+#      (see infra/docker/cpu_worker.Dockerfile);
+#   3. weights present at ./var/models/yolo11n.pt with a recorded SHA-256.
+#
+# Verifying `nvidia-smi` inside the container is *not* evidence of GPU inference.
+# The acceptance run must show YOLO actually running on `cuda` and record the device,
+# model SHA, input SHA and timings (reports/v21/yolo-real.json).
+services:
+  worker-vision:
+    build:
+      args:
+        # 只有 GPU overlay 才要求 CUDA 版 torch；基础栈保持 CPU 版不受影响。
+        # 未显式 export 时默认使用 cu124 轮子索引。
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu124}
+    environment:
+      # The variable the detector actually reads (config.py: yolo_device).
+      YOLO_DEVICE: ${YOLO_DEVICE:-cuda}
+      DETECTOR: ${DETECTOR:-yolo11n}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

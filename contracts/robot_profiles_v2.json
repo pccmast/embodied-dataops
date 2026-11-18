@@ -1,0 +1,131 @@
+{
+  "profiles": [
+    {
+      "schema_version": "robot-profile/2.0",
+      "profile_id": "arm6_joint_position_v1",
+      "profile_revision": 1,
+      "authority": "SYNTHETIC_FIXTURE",
+      "source_evidence_asset_id": null,
+      "state_semantics": "joint_position",
+      "action_semantics": "joint_target_position",
+      "state_unit": "rad",
+      "action_unit": "rad",
+      "joint_names": [
+        "joint_1",
+        "joint_2",
+        "joint_3",
+        "joint_4",
+        "joint_5",
+        "joint_6"
+      ],
+      "joint_lower_rad": [
+        -3.14,
+        -3.14,
+        -3.14,
+        -3.14,
+        -3.14,
+        -3.14
+      ],
+      "joint_upper_rad": [
+        3.14,
+        3.14,
+        3.14,
+        3.14,
+        3.14,
+        3.14
+      ],
+      "max_abs_velocity_rad_s": [
+        6.0,
+        6.0,
+        6.0,
+        6.0,
+        6.0,
+        6.0
+      ],
+      "continuous_joints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "required_camera_names": [
+        "front"
+      ],
+      "optional_camera_names": [
+        "wrist"
+      ],
+      "aligned_fps": 10,
+      "preview_fps": 10,
+      "max_clock_offset_ns": 50000000,
+      "notes": "Fixtures only; synthetic limit values do not establish a physical robot safety specification."
+    },
+    {
+      "schema_version": "robot-profile/2.0",
+      "profile_id": "arm7_joint_position_v1",
+      "profile_revision": 1,
+      "authority": "SYNTHETIC_FIXTURE",
+      "source_evidence_asset_id": null,
+      "state_semantics": "joint_position",
+      "action_semantics": "joint_target_position",
+      "state_unit": "rad",
+      "action_unit": "rad",
+      "joint_names": [
+        "joint_1",
+        "joint_2",
+        "joint_3",
+        "joint_4",
+        "joint_5",
+        "joint_6",
+        "joint_7"
+      ],
+      "joint_lower_rad": [
+        -3.0,
+        -3.0,
+        -3.0,
+        -3.0,
+        -3.0,
+        -3.0,
+        -3.0
+      ],
+      "joint_upper_rad": [
+        3.0,
+        3.0,
+        3.0,
+        3.0,
+        3.0,
+        3.0,
+        3.0
+      ],
+      "max_abs_velocity_rad_s": [
+        4.0,
+        4.0,
+        4.0,
+        4.0,
+        4.0,
+        4.0,
+        4.0
+      ],
+      "continuous_joints": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "required_camera_names": [
+        "front"
+      ],
+      "optional_camera_names": [
+        "wrist"
+      ],
+      "aligned_fps": 10,
+      "preview_fps": 10,
+      "max_clock_offset_ns": 50000000,
+      "notes": "Fixtures only; synthetic limit values do not establish a physical robot safety specification."
+    }
+  ]
+}

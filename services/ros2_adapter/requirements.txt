@@ -1,0 +1,15 @@
+# Non-ROS Python dependencies of the MCAP / ROS 2 adapter.
+#
+# These are the dependencies of the *development fallback* reader and of the
+# pure-Python CDR fixture generation.  They can be installed on any host.
+#
+# The production path (SPEC 5.4) runs inside the Ubuntu 24.04 / ROS 2 Jazzy
+# `worker-ros2` image and uses the ROS-provided `rosbag2_py`,
+# `rosbag2_storage_mcap` and `rclpy` system packages.  Those are deliberately
+# NOT listed here: they are apt/rosdep packages bound to the distro Python and
+# must never be pip-installed into the main API Python 3.11 environment
+# (SPEC 2, SPEC 17).  See services/ros2_adapter/reader.py for the dual path.
+mcap>=1.2,<2
+numpy>=1.26,<2.3
+pyarrow>=17.0
+pydantic>=2.9

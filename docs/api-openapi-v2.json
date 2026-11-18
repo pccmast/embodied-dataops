@@ -1,0 +1,4582 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Embodied DataOps API",
+    "description": "Multimodal embodied-data production platform: imports, canonical episodes, quality reports, review, dataset versions and feedback orders.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/health/live": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Live",
+        "operationId": "live_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Live Health Live Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Ready",
+        "operationId": "ready_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": [
+          "observability"
+        ],
+        "summary": "Metrics",
+        "description": "Prometheus text format.\n\nPrometheus scrapes without an API key, so anonymous access is limited to\ninternal (loopback/private) clients; external callers must present an\nadmin key.",
+        "operationId": "metrics_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/_storage/put/{key}": {
+      "put": {
+        "tags": [
+          "storage"
+        ],
+        "summary": "Signed Put",
+        "operationId": "signed_put_api_v1__storage_put__key__put",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Key"
+            }
+          },
+          {
+            "name": "exp",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Exp"
+            }
+          },
+          {
+            "name": "sig",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sig"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/_storage/get/{key}": {
+      "get": {
+        "tags": [
+          "storage"
+        ],
+        "summary": "Signed Get",
+        "operationId": "signed_get_api_v1__storage_get__key__get",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Key"
+            }
+          },
+          {
+            "name": "exp",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Exp"
+            }
+          },
+          {
+            "name": "sig",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sig"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/imports/initiate": {
+      "post": {
+        "tags": [
+          "imports"
+        ],
+        "summary": "Initiate",
+        "operationId": "initiate_api_v1_imports_initiate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitiateImportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/imports/{import_id}/complete": {
+      "post": {
+        "tags": [
+          "imports"
+        ],
+        "summary": "Complete",
+        "operationId": "complete_api_v1_imports__import_id__complete_post",
+        "parameters": [
+          {
+            "name": "import_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Import Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/imports/{import_id}": {
+      "get": {
+        "tags": [
+          "imports"
+        ],
+        "summary": "Detail",
+        "operationId": "detail_api_v1_imports__import_id__get",
+        "parameters": [
+          {
+            "name": "import_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Import Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes": {
+      "get": {
+        "tags": [
+          "episodes"
+        ],
+        "summary": "List Episodes",
+        "operationId": "list_episodes_api_v1_episodes_get",
+        "parameters": [
+          {
+            "name": "source_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Source Type"
+            }
+          },
+          {
+            "name": "quality_status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Quality Status"
+            }
+          },
+          {
+            "name": "task_label",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Task Label"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes/{episode_id}": {
+      "get": {
+        "tags": [
+          "episodes"
+        ],
+        "summary": "Get Episode",
+        "operationId": "get_episode_api_v1_episodes__episode_id__get",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes/{episode_id}/canonical": {
+      "get": {
+        "tags": [
+          "episodes"
+        ],
+        "summary": "Get Canonical",
+        "description": "DO-A02 C7: v2 canonical metadata + safe asset descriptions (no raw bytes/URLs).",
+        "operationId": "get_canonical_api_v1_episodes__episode_id__canonical_get",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes/{episode_id}/samples": {
+      "get": {
+        "tags": [
+          "episodes"
+        ],
+        "summary": "Get Samples",
+        "operationId": "get_samples_api_v1_episodes__episode_id__samples_get",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          },
+          {
+            "name": "start_ns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Start Ns"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes/{episode_id}/preview": {
+      "get": {
+        "tags": [
+          "episodes"
+        ],
+        "summary": "Get Preview",
+        "operationId": "get_preview_api_v1_episodes__episode_id__preview_get",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes/{episode_id}/quality": {
+      "get": {
+        "tags": [
+          "episodes"
+        ],
+        "summary": "Get Quality",
+        "operationId": "get_quality_api_v1_episodes__episode_id__quality_get",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          },
+          {
+            "name": "run_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Run Id"
+            }
+          },
+          {
+            "name": "policy_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Policy Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes/{episode_id}/pipeline-runs": {
+      "post": {
+        "tags": [
+          "pipeline"
+        ],
+        "summary": "Create Run",
+        "description": "DO-A02 C3: conditional re-process; requires If-Match episode-rev + Idempotency-Key.",
+        "operationId": "create_run_api_v1_episodes__episode_id__pipeline_runs_post",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "If-Match"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePipelineRunRequestV2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pipeline-runs/{run_id}": {
+      "get": {
+        "tags": [
+          "pipeline"
+        ],
+        "summary": "Get Run",
+        "operationId": "get_run_api_v1_pipeline_runs__run_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pipeline-runs/{run_id}/cancel": {
+      "post": {
+        "tags": [
+          "pipeline"
+        ],
+        "summary": "Cancel Run",
+        "operationId": "cancel_run_api_v1_pipeline_runs__run_id__cancel_post",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{task_id}/retry": {
+      "post": {
+        "tags": [
+          "pipeline"
+        ],
+        "summary": "Retry Task",
+        "description": "DO-A02 C3: retry a FAILED task; requires If-Match task-rev + expected_run_id.",
+        "operationId": "retry_task_api_v1_tasks__task_id__retry_post",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "If-Match"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RetryTaskRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tasks/{task_id}": {
+      "get": {
+        "tags": [
+          "pipeline"
+        ],
+        "summary": "Get Task",
+        "description": "DO-A02 C2: single task read with a strong ``task-rev`` ETag (viewer).",
+        "operationId": "get_task_api_v1_tasks__task_id__get",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          },
+          {
+            "name": "include_output",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Include Output"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes/{episode_id}/annotations": {
+      "get": {
+        "tags": [
+          "annotations"
+        ],
+        "summary": "Get Episode Annotations",
+        "description": "Latest annotation candidates for an Episode plus 10-minute preview URLs.",
+        "operationId": "get_episode_annotations_api_v1_episodes__episode_id__annotations_get",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EpisodeAnnotationsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/annotation-sets/{annotation_set_id}/reviews": {
+      "post": {
+        "tags": [
+          "annotations"
+        ],
+        "summary": "Create Annotation Review",
+        "description": "Approve or reject the latest annotation candidates (SPEC 7.2).",
+        "operationId": "create_annotation_review_api_v1_annotation_sets__annotation_set_id__reviews_post",
+        "parameters": [
+          {
+            "name": "annotation_set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Annotation Set Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnnotationReviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnnotationReviewResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/annotation-sets/{annotation_set_id}/revisions": {
+      "get": {
+        "tags": [
+          "annotation-revisions"
+        ],
+        "summary": "List Revisions",
+        "description": "List every immutable revision of the set plus the current/approved pointers.",
+        "operationId": "list_revisions_api_v1_annotation_sets__annotation_set_id__revisions_get",
+        "parameters": [
+          {
+            "name": "annotation_set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Annotation Set Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnnotationRevisionListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "annotation-revisions"
+        ],
+        "summary": "Create Revision",
+        "description": "Append revision ``current+1`` (complete replacement of the listed frames).",
+        "operationId": "create_revision_api_v1_annotation_sets__annotation_set_id__revisions_post",
+        "parameters": [
+          {
+            "name": "annotation_set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Annotation Set Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnnotationRevisionCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnnotationRevisionCreatedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/annotation-sets/{annotation_set_id}/revisions/{revision_no}": {
+      "get": {
+        "tags": [
+          "annotation-revisions"
+        ],
+        "summary": "Get Revision",
+        "description": "Return one revision content and its strong ETag.",
+        "operationId": "get_revision_api_v1_annotation_sets__annotation_set_id__revisions__revision_no__get",
+        "parameters": [
+          {
+            "name": "annotation_set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Annotation Set Id"
+            }
+          },
+          {
+            "name": "revision_no",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Revision No"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnnotationRevisionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/annotation-revisions/{revision_id}/decision": {
+      "post": {
+        "tags": [
+          "annotation-revisions"
+        ],
+        "summary": "Decide Revision",
+        "description": "Approve/reject a revision; approval switches the explicit publication pointer.",
+        "operationId": "decide_revision_api_v1_annotation_revisions__revision_id__decision_post",
+        "parameters": [
+          {
+            "name": "revision_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Revision Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnnotationRevisionDecisionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnnotationRevisionDecisionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes/{episode_id}/ai-preannotation-runs": {
+      "post": {
+        "tags": [
+          "ai-preannotation"
+        ],
+        "summary": "Create Ai Run",
+        "description": "Start a V2.1 run whose DAG ends in a reviewed candidate annotation set.",
+        "operationId": "create_ai_run_api_v1_episodes__episode_id__ai_preannotation_runs_post",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AiPreannotationRunRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes/{episode_id}/ai-preannotations": {
+      "get": {
+        "tags": [
+          "ai-preannotation"
+        ],
+        "summary": "List Ai Preannotations",
+        "description": "Everything a reviewer needs: clips, provenance, candidates and schema errors.",
+        "operationId": "list_ai_preannotations_api_v1_episodes__episode_id__ai_preannotations_get",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response List Ai Preannotations Api V1 Episodes  Episode Id  Ai Preannotations Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai-inferences/{inference_id}": {
+      "get": {
+        "tags": [
+          "ai-preannotation"
+        ],
+        "summary": "Get Ai Inference",
+        "description": "Status, latency, token usage and a bounded summary; never the raw prompt.",
+        "operationId": "get_ai_inference_api_v1_ai_inferences__inference_id__get",
+        "parameters": [
+          {
+            "name": "inference_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Inference Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Ai Inference Api V1 Ai Inferences  Inference Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai-preannotations/{annotation_set_id}/revisions": {
+      "post": {
+        "tags": [
+          "ai-preannotation"
+        ],
+        "summary": "Create Ai Revision",
+        "description": "Append an ACTION_INTERVAL revision; the model answer itself is never rewritten.",
+        "operationId": "create_ai_revision_api_v1_ai_preannotations__annotation_set_id__revisions_post",
+        "parameters": [
+          {
+            "name": "annotation_set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Annotation Set Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "If-Match"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AiRevisionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ai-preannotations/{annotation_set_id}/decision": {
+      "post": {
+        "tags": [
+          "ai-preannotation"
+        ],
+        "summary": "Decide Ai Preannotation",
+        "description": "Approve or reject the latest revision; the approver must not be its editor.",
+        "operationId": "decide_ai_preannotation_api_v1_ai_preannotations__annotation_set_id__decision_post",
+        "parameters": [
+          {
+            "name": "annotation_set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Annotation Set Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AiDecisionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Decide Ai Preannotation Api V1 Ai Preannotations  Annotation Set Id  Decision Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes/{episode_id}/ai-quality-summary": {
+      "get": {
+        "tags": [
+          "ai-preannotation"
+        ],
+        "summary": "Ai Quality Summary",
+        "description": "Schema validity, approval state and the warnings a human should read first.",
+        "operationId": "ai_quality_summary_api_v1_episodes__episode_id__ai_quality_summary_get",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Ai Quality Summary Api V1 Episodes  Episode Id  Ai Quality Summary Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/model-usage": {
+      "get": {
+        "tags": [
+          "ai-preannotation"
+        ],
+        "summary": "Model Usage",
+        "description": "Calls, retries, tokens and an *estimated* cost -- never a precise bill.",
+        "operationId": "model_usage_api_v1_model_usage_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Model Usage Api V1 Model Usage Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes/{episode_id}/scenario-tags": {
+      "get": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "List Scenario Tags",
+        "operationId": "list_scenario_tags_api_v1_episodes__episode_id__scenario_tags_get",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "Add Scenario Tag",
+        "operationId": "add_scenario_tag_api_v1_episodes__episode_id__scenario_tags_post",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddScenarioTagRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/quality/coverage": {
+      "get": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "Get Quality Coverage",
+        "operationId": "get_quality_coverage_api_v1_quality_coverage_get",
+        "parameters": [
+          {
+            "name": "dataset_version_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 36,
+              "title": "Dataset Version Id"
+            }
+          },
+          {
+            "name": "scenario_key",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 64,
+              "title": "Scenario Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/collection-orders/{order_id}": {
+      "get": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "Get Collection Order",
+        "operationId": "get_collection_order_api_v1_collection_orders__order_id__get",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/collection-orders/{order_id}/approve": {
+      "post": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "Approve Collection Order",
+        "operationId": "approve_collection_order_api_v1_collection_orders__order_id__approve_post",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveCollectionOrderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/collection-orders/{order_id}/link-episodes": {
+      "post": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "Link Collection Order Episodes",
+        "operationId": "link_collection_order_episodes_api_v1_collection_orders__order_id__link_episodes_post",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LinkCollectionOrderEpisodesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/collection-orders/{order_id}/cancel": {
+      "post": {
+        "tags": [
+          "collection"
+        ],
+        "summary": "Cancel Collection Order",
+        "operationId": "cancel_collection_order_api_v1_collection_orders__order_id__cancel_post",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Order Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelCollectionOrderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/datasets": {
+      "post": {
+        "tags": [
+          "datasets"
+        ],
+        "summary": "Create Dataset",
+        "operationId": "create_dataset_api_v1_datasets_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDatasetRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/datasets/{dataset_id}/versions": {
+      "post": {
+        "tags": [
+          "datasets"
+        ],
+        "summary": "Create Version",
+        "operationId": "create_version_api_v1_datasets__dataset_id__versions_post",
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dataset Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVersionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "datasets"
+        ],
+        "summary": "List Versions",
+        "operationId": "list_versions_api_v1_datasets__dataset_id__versions_get",
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dataset Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/datasets/{dataset_id}/versions/{version}": {
+      "get": {
+        "tags": [
+          "datasets"
+        ],
+        "summary": "Get Version",
+        "operationId": "get_version_api_v1_datasets__dataset_id__versions__version__get",
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dataset Id"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/datasets/{dataset_id}/versions/{version}/membership": {
+      "post": {
+        "tags": [
+          "datasets"
+        ],
+        "summary": "Modify Membership",
+        "operationId": "modify_membership_api_v1_datasets__dataset_id__versions__version__membership_post",
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dataset Id"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Version"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MembershipRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dataset-versions/{version_id}/publish": {
+      "post": {
+        "tags": [
+          "datasets"
+        ],
+        "summary": "Publish",
+        "operationId": "publish_api_v1_dataset_versions__version_id__publish_post",
+        "parameters": [
+          {
+            "name": "version_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Version Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/datasets/{dataset_id}/ego-bundle-versions": {
+      "post": {
+        "tags": [
+          "datasets"
+        ],
+        "summary": "Create Ego Bundle Version",
+        "description": "Create a READY ``EGO_ANNOTATION_BUNDLE`` version from approved ego episodes.",
+        "operationId": "create_ego_bundle_version_api_v1_datasets__dataset_id__ego_bundle_versions_post",
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dataset Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEgoBundleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dataset-versions/{version_id}/evaluations": {
+      "post": {
+        "tags": [
+          "feedback"
+        ],
+        "summary": "Create Evaluation",
+        "operationId": "create_evaluation_api_v1_dataset_versions__version_id__evaluations_post",
+        "parameters": [
+          {
+            "name": "version_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Version Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEvaluationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/evaluations/{evaluation_id}/analyze-gaps": {
+      "post": {
+        "tags": [
+          "feedback"
+        ],
+        "summary": "Analyze Gaps",
+        "description": "DO-A02 C3: conditional gap analysis; 202 carries the operation receipt id.",
+        "operationId": "analyze_gaps_api_v1_evaluations__evaluation_id__analyze_gaps_post",
+        "parameters": [
+          {
+            "name": "evaluation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Evaluation Id"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "If-Match"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeGapsRequestV2"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/collection-orders": {
+      "get": {
+        "tags": [
+          "feedback"
+        ],
+        "summary": "List Collection Orders",
+        "operationId": "list_collection_orders_api_v1_collection_orders_get",
+        "parameters": [
+          {
+            "name": "evaluation_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Evaluation Id"
+            }
+          },
+          {
+            "name": "scenario_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scenario Key"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "State"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/evaluations/{evaluation_id}": {
+      "get": {
+        "tags": [
+          "feedback"
+        ],
+        "summary": "Get Evaluation",
+        "description": "DO-A01 strict read model + DO-A02 C2 business revision / results hash.",
+        "operationId": "get_evaluation_api_v1_evaluations__evaluation_id__get",
+        "parameters": [
+          {
+            "name": "evaluation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Evaluation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/capabilities": {
+      "get": {
+        "tags": [
+          "operations"
+        ],
+        "summary": "Capabilities",
+        "description": "C1: contract start-up probe (viewer).",
+        "operationId": "capabilities_api_v1_capabilities_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/operations/{operation_id}": {
+      "get": {
+        "tags": [
+          "operations"
+        ],
+        "summary": "Get Operation",
+        "description": "C4: receipt + REAL downstream state, operator-only.",
+        "operationId": "get_operation_api_v1_operations__operation_id__get",
+        "parameters": [
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Operation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/operations/by-key/{idempotency_key}": {
+      "get": {
+        "tags": [
+          "operations"
+        ],
+        "summary": "Get Operation By Key",
+        "description": "C4: look up a receipt by Idempotency-Key, operator-only.",
+        "operationId": "get_operation_by_key_api_v1_operations_by_key__idempotency_key__get",
+        "parameters": [
+          {
+            "name": "idempotency_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Idempotency Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/episodes/{episode_id}/timeline": {
+      "get": {
+        "tags": [
+          "diagnostics"
+        ],
+        "summary": "Get Timeline",
+        "operationId": "get_timeline_api_v1_episodes__episode_id__timeline_get",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Episode Id"
+            }
+          },
+          {
+            "name": "start_ns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Start Ns"
+            }
+          },
+          {
+            "name": "end_ns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "End Ns"
+            }
+          },
+          {
+            "name": "max_points",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 100,
+              "title": "Max Points"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pipeline-runs/{run_id}/failure-analysis": {
+      "get": {
+        "tags": [
+          "diagnostics"
+        ],
+        "summary": "Get Failure Analysis",
+        "operationId": "get_failure_analysis_api_v1_pipeline_runs__run_id__failure_analysis_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/quality/aggregate": {
+      "get": {
+        "tags": [
+          "diagnostics"
+        ],
+        "summary": "Get Quality Aggregate",
+        "operationId": "get_quality_aggregate_api_v1_quality_aggregate_get",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "From"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "To"
+            }
+          },
+          {
+            "name": "group_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "source_type",
+              "title": "Group By"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 50,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/audit-events": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Audit Events",
+        "operationId": "list_audit_events_api_v1_audit_events_get",
+        "parameters": [
+          {
+            "name": "entity_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Entity Type"
+            }
+          },
+          {
+            "name": "entity_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Entity Id"
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Action"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/stats": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Stats",
+        "operationId": "stats_api_v1_admin_stats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddScenarioTagRequest": {
+        "properties": {
+          "scenario_key": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 3,
+            "title": "Scenario Key"
+          },
+          "basis": {
+            "type": "string",
+            "pattern": "^(SOURCE_DECLARED|HUMAN_VERIFIED|UNKNOWN)$",
+            "title": "Basis",
+            "default": "HUMAN_VERIFIED"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Note",
+            "default": ""
+          },
+          "source_evidence_asset_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 36
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Evidence Asset Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "scenario_key"
+        ],
+        "title": "AddScenarioTagRequest"
+      },
+      "AiActionInterval": {
+        "properties": {
+          "verb": {
+            "type": "string",
+            "enum": [
+              "pick_up",
+              "put_down",
+              "move",
+              "open",
+              "close",
+              "pour",
+              "cut",
+              "other",
+              "uncertain"
+            ],
+            "title": "Verb"
+          },
+          "noun": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$",
+            "title": "Noun"
+          },
+          "start_ns": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Start Ns"
+          },
+          "end_ns": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "End Ns"
+          },
+          "evidence_frame_indices": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Evidence Frame Indices"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "verb",
+          "noun",
+          "start_ns",
+          "end_ns",
+          "evidence_frame_indices"
+        ],
+        "title": "AiActionInterval",
+        "description": "One reviewed action interval (what a human submits, not what a model guesses)."
+      },
+      "AiDecisionRequest": {
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "APPROVED",
+              "REJECTED"
+            ],
+            "title": "Decision"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "decision"
+        ],
+        "title": "AiDecisionRequest"
+      },
+      "AiPreannotationRunRequest": {
+        "properties": {
+          "model_pipeline_version": {
+            "type": "string",
+            "const": "2.1.0",
+            "title": "Model Pipeline Version",
+            "default": "2.1.0"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "live",
+              "replay"
+            ],
+            "title": "Mode",
+            "default": "replay"
+          },
+          "keyframe_policy": {
+            "type": "string",
+            "const": "fps1_clips8s",
+            "title": "Keyframe Policy",
+            "default": "fps1_clips8s"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "AiPreannotationRunRequest"
+      },
+      "AiRevisionRequest": {
+        "properties": {
+          "base_revision_no": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base Revision No"
+          },
+          "actions": {
+            "items": {
+              "$ref": "#/components/schemas/AiActionInterval"
+            },
+            "type": "array",
+            "maxItems": 200,
+            "minItems": 0,
+            "title": "Actions"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "actions"
+        ],
+        "title": "AiRevisionRequest"
+      },
+      "AnalyzeGapsRequestV2": {
+        "properties": {
+          "success_rate_threshold": {
+            "type": "number",
+            "maximum": 1.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Success Rate Threshold",
+            "default": 0.8
+          },
+          "min_trials": {
+            "type": "integer",
+            "maximum": 1000000.0,
+            "minimum": 1.0,
+            "title": "Min Trials",
+            "default": 20
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "AnalyzeGapsRequestV2",
+        "description": "Body of ``POST /evaluations/{id}/analyze-gaps`` (DO-A02 C3)."
+      },
+      "AnnotationFrameOut": {
+        "properties": {
+          "frame_index": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Frame Index",
+            "description": "Canonical 10 Hz frame index (0, 10, 20, ...)"
+          },
+          "t_ns": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "T Ns"
+          },
+          "preview_url": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Preview Url",
+            "description": "Short-lived presigned URL of the canonical preview video (seek to frame_index)"
+          },
+          "detections": {
+            "items": {
+              "$ref": "#/components/schemas/DetectionOut"
+            },
+            "type": "array",
+            "title": "Detections"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "frame_index",
+          "t_ns",
+          "preview_url"
+        ],
+        "title": "AnnotationFrameOut",
+        "description": "One sampled (1 fps) frame and its detections."
+      },
+      "AnnotationReviewCreated": {
+        "properties": {
+          "review_id": {
+            "type": "string",
+            "title": "Review Id"
+          },
+          "new_status": {
+            "type": "string",
+            "enum": [
+              "PENDING_REVIEW",
+              "APPROVED",
+              "REJECTED"
+            ],
+            "title": "New Status"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "review_id",
+          "new_status"
+        ],
+        "title": "AnnotationReviewCreated",
+        "description": "New review decision returned to the caller."
+      },
+      "AnnotationReviewRequest": {
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "APPROVED",
+              "REJECTED"
+            ],
+            "title": "Decision"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 4000,
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "decision"
+        ],
+        "title": "AnnotationReviewRequest",
+        "description": "Request body of ``POST /annotation-sets/{id}/reviews``."
+      },
+      "AnnotationReviewResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/AnnotationReviewCreated"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "data",
+          "request_id"
+        ],
+        "title": "AnnotationReviewResponse",
+        "description": "Success envelope (SPEC 9.1) for ``POST /annotation-sets/{id}/reviews``."
+      },
+      "AnnotationRevisionContentOut": {
+        "properties": {
+          "annotation_set_id": {
+            "type": "string",
+            "title": "Annotation Set Id"
+          },
+          "revision_no": {
+            "type": "integer",
+            "title": "Revision No"
+          },
+          "revision_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revision Id"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "IN_REVIEW",
+              "APPROVED",
+              "REJECTED"
+            ],
+            "title": "State"
+          },
+          "content_sha256": {
+            "type": "string",
+            "title": "Content Sha256"
+          },
+          "etag": {
+            "type": "string",
+            "title": "Etag"
+          },
+          "annotation": {
+            "$ref": "#/components/schemas/AnnotationRevisionDocument"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "annotation_set_id",
+          "revision_no",
+          "state",
+          "content_sha256",
+          "etag",
+          "annotation"
+        ],
+        "title": "AnnotationRevisionContentOut",
+        "description": "Payload of ``GET /annotation-sets/{id}/revisions/{no}``."
+      },
+      "AnnotationRevisionCreateRequest": {
+        "properties": {
+          "base_revision_no": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Base Revision No"
+          },
+          "frames": {
+            "items": {
+              "$ref": "#/components/schemas/AnnotationRevisionFrame"
+            },
+            "type": "array",
+            "maxItems": 600,
+            "title": "Frames",
+            "description": "Only the frames to replace; every other frame is copied from the base revision"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 10,
+            "title": "Note",
+            "description": "Change note, 10..500 characters (trimmed before validation)"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "base_revision_no",
+          "note"
+        ],
+        "title": "AnnotationRevisionCreateRequest",
+        "description": "Request body of ``POST /annotation-sets/{id}/revisions`` (SPEC §4.2)."
+      },
+      "AnnotationRevisionCreatedOut": {
+        "properties": {
+          "annotation_set_id": {
+            "type": "string",
+            "title": "Annotation Set Id"
+          },
+          "current_revision_no": {
+            "type": "integer",
+            "title": "Current Revision No"
+          },
+          "etag": {
+            "type": "string",
+            "title": "Etag"
+          },
+          "revision": {
+            "$ref": "#/components/schemas/AnnotationRevisionOut"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "annotation_set_id",
+          "current_revision_no",
+          "etag",
+          "revision"
+        ],
+        "title": "AnnotationRevisionCreatedOut",
+        "description": "New revision returned by ``POST /annotation-sets/{id}/revisions``."
+      },
+      "AnnotationRevisionCreatedResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/AnnotationRevisionCreatedOut"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "data",
+          "request_id"
+        ],
+        "title": "AnnotationRevisionCreatedResponse",
+        "description": "Success envelope for a new revision."
+      },
+      "AnnotationRevisionDecisionOut": {
+        "properties": {
+          "annotation_set_id": {
+            "type": "string",
+            "title": "Annotation Set Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "current_revision_no": {
+            "type": "integer",
+            "title": "Current Revision No"
+          },
+          "approved_revision_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approved Revision Id"
+          },
+          "revision": {
+            "$ref": "#/components/schemas/AnnotationRevisionOut"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "annotation_set_id",
+          "status",
+          "current_revision_no",
+          "revision"
+        ],
+        "title": "AnnotationRevisionDecisionOut",
+        "description": "Result of ``POST /annotation-revisions/{id}/decision``."
+      },
+      "AnnotationRevisionDecisionRequest": {
+        "properties": {
+          "decision": {
+            "type": "string",
+            "enum": [
+              "APPROVED",
+              "REJECTED"
+            ],
+            "title": "Decision"
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 4000,
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "decision"
+        ],
+        "title": "AnnotationRevisionDecisionRequest",
+        "description": "Request body of ``POST /annotation-revisions/{id}/decision``."
+      },
+      "AnnotationRevisionDecisionResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/AnnotationRevisionDecisionOut"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "data",
+          "request_id"
+        ],
+        "title": "AnnotationRevisionDecisionResponse",
+        "description": "Success envelope for a revision decision."
+      },
+      "AnnotationRevisionDetection": {
+        "properties": {
+          "detection_id": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Detection Id"
+          },
+          "class_id": {
+            "type": "integer",
+            "maximum": 79.0,
+            "minimum": 0.0,
+            "title": "Class Id",
+            "description": "Detector/COCO class id (0..79)"
+          },
+          "class_name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Class Name",
+            "description": "Fixed detector taxonomy name, or 'other' for a manual class"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          },
+          "xyxy": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "maxItems": 4,
+            "minItems": 4,
+            "title": "Xyxy",
+            "description": "Box corners [x1,y1,x2,y2] with 0<=x1<x2<=640, 0<=y1<y2<=480"
+          },
+          "origin": {
+            "type": "string",
+            "enum": [
+              "MODEL",
+              "HUMAN"
+            ],
+            "title": "Origin",
+            "description": "MODEL output or HUMAN edit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "detection_id",
+          "class_id",
+          "class_name",
+          "xyxy",
+          "origin"
+        ],
+        "title": "AnnotationRevisionDetection",
+        "description": "One detection inside a ``annotation-revision/2.0`` frame.\n\nCoordinates must satisfy SPEC §4.2: ``0 <= x1 < x2 <= 640`` and\n``0 <= y1 < y2 <= 480``.  ``score`` is ``null`` for a purely manual box."
+      },
+      "AnnotationRevisionDocument": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "const": "annotation-revision/2.0",
+            "title": "Schema Version"
+          },
+          "annotation_set_id": {
+            "type": "string",
+            "title": "Annotation Set Id"
+          },
+          "revision_no": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Revision No"
+          },
+          "camera_name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Camera Name"
+          },
+          "frame_width": {
+            "type": "integer",
+            "title": "Frame Width"
+          },
+          "frame_height": {
+            "type": "integer",
+            "title": "Frame Height"
+          },
+          "frames": {
+            "items": {
+              "$ref": "#/components/schemas/AnnotationRevisionFrame"
+            },
+            "type": "array",
+            "title": "Frames"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "schema_version",
+          "annotation_set_id",
+          "revision_no",
+          "camera_name",
+          "frame_width",
+          "frame_height",
+          "frames"
+        ],
+        "title": "AnnotationRevisionDocument",
+        "description": "Full ``annotation-revision/2.0`` content returned by GET."
+      },
+      "AnnotationRevisionFrame": {
+        "properties": {
+          "frame_index": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Frame Index"
+          },
+          "t_ns": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "T Ns"
+          },
+          "detections": {
+            "items": {
+              "$ref": "#/components/schemas/AnnotationRevisionDetection"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Detections"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "frame_index",
+          "t_ns"
+        ],
+        "title": "AnnotationRevisionFrame",
+        "description": "One video frame of an ``annotation-revision/2.0`` document."
+      },
+      "AnnotationRevisionListOut": {
+        "properties": {
+          "annotation_set_id": {
+            "type": "string",
+            "title": "Annotation Set Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "current_revision_no": {
+            "type": "integer",
+            "title": "Current Revision No"
+          },
+          "approved_revision_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approved Revision Id"
+          },
+          "revisions": {
+            "items": {
+              "$ref": "#/components/schemas/AnnotationRevisionOut"
+            },
+            "type": "array",
+            "title": "Revisions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "annotation_set_id",
+          "status",
+          "current_revision_no"
+        ],
+        "title": "AnnotationRevisionListOut",
+        "description": "Payload of ``GET /annotation-sets/{id}/revisions``."
+      },
+      "AnnotationRevisionListResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/AnnotationRevisionListOut"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "data",
+          "request_id"
+        ],
+        "title": "AnnotationRevisionListResponse",
+        "description": "Success envelope for the revision list."
+      },
+      "AnnotationRevisionOut": {
+        "properties": {
+          "revision_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revision Id"
+          },
+          "annotation_set_id": {
+            "type": "string",
+            "title": "Annotation Set Id"
+          },
+          "revision_no": {
+            "type": "integer",
+            "title": "Revision No"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "IN_REVIEW",
+              "APPROVED",
+              "REJECTED"
+            ],
+            "title": "State"
+          },
+          "base_revision_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base Revision Id"
+          },
+          "content_sha256": {
+            "type": "string",
+            "title": "Content Sha256"
+          },
+          "artifact_sha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Artifact Sha256"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "approved_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approved By"
+          },
+          "approved_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approved At"
+          },
+          "change_summary": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Change Summary"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "annotation_set_id",
+          "revision_no",
+          "state",
+          "content_sha256"
+        ],
+        "title": "AnnotationRevisionOut",
+        "description": "Metadata of one immutable annotation revision."
+      },
+      "AnnotationRevisionResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/AnnotationRevisionContentOut"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "data",
+          "request_id"
+        ],
+        "title": "AnnotationRevisionResponse",
+        "description": "Success envelope for one revision content."
+      },
+      "AnnotationSetOut": {
+        "properties": {
+          "annotation_set_id": {
+            "type": "string",
+            "title": "Annotation Set Id"
+          },
+          "episode_id": {
+            "type": "string",
+            "title": "Episode Id"
+          },
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "model_id": {
+            "type": "string",
+            "title": "Model Id"
+          },
+          "model_sha256": {
+            "type": "string",
+            "title": "Model Sha256"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING_REVIEW",
+              "APPROVED",
+              "REJECTED"
+            ],
+            "title": "Status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "schema_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Schema Version"
+          },
+          "tool": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tool",
+            "description": "'yolo11n' for real inference, 'fake' for test doubles"
+          },
+          "is_synthetic": {
+            "type": "boolean",
+            "title": "Is Synthetic",
+            "description": "True when produced by FakeDetector (never real inference)",
+            "default": false
+          },
+          "model": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Model"
+          },
+          "stats": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stats"
+          },
+          "summary": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Summary"
+          },
+          "artifact_url": {
+            "type": "string",
+            "title": "Artifact Url"
+          },
+          "artifact_sha256": {
+            "type": "string",
+            "title": "Artifact Sha256"
+          },
+          "artifact_size": {
+            "type": "integer",
+            "title": "Artifact Size",
+            "default": 0
+          },
+          "preview_video_url": {
+            "type": "string",
+            "title": "Preview Video Url"
+          },
+          "thumbnail_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumbnail Url"
+          },
+          "preview_expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Preview Expires At"
+          },
+          "current_revision_no": {
+            "type": "integer",
+            "title": "Current Revision No",
+            "default": 1
+          },
+          "approved_revision_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approved Revision Id"
+          },
+          "revision_count": {
+            "type": "integer",
+            "title": "Revision Count",
+            "default": 0
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "annotation_set_id",
+          "episode_id",
+          "run_id",
+          "model_id",
+          "model_sha256",
+          "status",
+          "created_at",
+          "artifact_url",
+          "artifact_sha256",
+          "preview_video_url",
+          "preview_expires_at"
+        ],
+        "title": "AnnotationSetOut",
+        "description": "Metadata of one immutable AnnotationSet."
+      },
+      "ApproveCollectionOrderRequest": {
+        "properties": {
+          "note": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "note"
+        ],
+        "title": "ApproveCollectionOrderRequest"
+      },
+      "CancelCollectionOrderRequest": {
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "reason"
+        ],
+        "title": "CancelCollectionOrderRequest"
+      },
+      "CreateDatasetRequest": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "pattern": "^[a-z0-9][a-z0-9_-]*$",
+            "title": "Slug"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Description",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "slug"
+        ],
+        "title": "CreateDatasetRequest"
+      },
+      "CreateEgoBundleRequest": {
+        "properties": {
+          "episode_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 10000,
+            "minItems": 1,
+            "title": "Episode Ids"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Description",
+            "default": ""
+          },
+          "licence_allows_video": {
+            "type": "boolean",
+            "title": "Licence Allows Video",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "episode_ids"
+        ],
+        "title": "CreateEgoBundleRequest",
+        "description": "V2.1 §14.3: an ego deliverable is a bundle, never a LeRobot trajectory."
+      },
+      "CreateEvaluationRequest": {
+        "properties": {
+          "schema_version": {
+            "type": "string",
+            "pattern": "^evaluation/1\\.0$",
+            "title": "Schema Version",
+            "default": "evaluation/1.0"
+          },
+          "model_id": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Model Id",
+            "default": "unknown"
+          },
+          "results": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "maxItems": 10000,
+            "minItems": 1,
+            "title": "Results"
+          },
+          "is_simulated": {
+            "type": "boolean",
+            "title": "Is Simulated",
+            "default": true
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "results"
+        ],
+        "title": "CreateEvaluationRequest"
+      },
+      "CreatePipelineRunRequestV2": {
+        "properties": {
+          "pipeline_version": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "title": "Pipeline Version",
+            "default": "2.0.0"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "CreatePipelineRunRequestV2",
+        "description": "Body of ``POST /episodes/{id}/pipeline-runs`` (DO-A02 C3)."
+      },
+      "CreateVersionRequest": {
+        "properties": {
+          "episode_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 10000,
+            "minItems": 1,
+            "title": "Episode Ids"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Description",
+            "default": ""
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "episode_ids"
+        ],
+        "title": "CreateVersionRequest"
+      },
+      "DataOrigin": {
+        "type": "string",
+        "enum": [
+          "synthetic",
+          "public_dataset",
+          "robot_capture",
+          "ego_capture"
+        ],
+        "title": "DataOrigin"
+      },
+      "DetectionOut": {
+        "properties": {
+          "class_id": {
+            "type": "integer",
+            "maximum": 79.0,
+            "minimum": 0.0,
+            "title": "Class Id",
+            "description": "COCO class id"
+          },
+          "class_name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Class Name"
+          },
+          "score": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Score",
+            "description": "Confidence rounded to 6 decimals"
+          },
+          "xyxy": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "maxItems": 4,
+            "minItems": 4,
+            "title": "Xyxy",
+            "description": "Box corners [x1,y1,x2,y2] within 0..640 x 0..480"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "class_id",
+          "class_name",
+          "score",
+          "xyxy"
+        ],
+        "title": "DetectionOut",
+        "description": "One detected object in final 640x480 pixel coordinates."
+      },
+      "EpisodeAnnotationsOut": {
+        "properties": {
+          "annotation_set": {
+            "$ref": "#/components/schemas/AnnotationSetOut"
+          },
+          "frames": {
+            "items": {
+              "$ref": "#/components/schemas/AnnotationFrameOut"
+            },
+            "type": "array",
+            "title": "Frames"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "annotation_set"
+        ],
+        "title": "EpisodeAnnotationsOut",
+        "description": "Payload of ``GET /episodes/{id}/annotations``."
+      },
+      "EpisodeAnnotationsResponse": {
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/EpisodeAnnotationsOut"
+          },
+          "request_id": {
+            "type": "string",
+            "title": "Request Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "data",
+          "request_id"
+        ],
+        "title": "EpisodeAnnotationsResponse",
+        "description": "Success envelope (SPEC 9.1)."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "InitiateImportRequest": {
+        "properties": {
+          "source_type": {
+            "$ref": "#/components/schemas/SourceType"
+          },
+          "filename": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Filename"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Size Bytes"
+          },
+          "sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Sha256"
+          },
+          "data_origin": {
+            "$ref": "#/components/schemas/DataOrigin"
+          },
+          "license": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "License",
+            "default": ""
+          },
+          "source_uri": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1024
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Uri"
+          },
+          "source_revision": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Revision"
+          },
+          "mapping": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mapping"
+          },
+          "collection_order_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 36
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Collection Order Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "source_type",
+          "filename",
+          "size_bytes",
+          "sha256",
+          "data_origin"
+        ],
+        "title": "InitiateImportRequest"
+      },
+      "LinkCollectionOrderEpisodesRequest": {
+        "properties": {
+          "episode_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Episode Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "episode_ids"
+        ],
+        "title": "LinkCollectionOrderEpisodesRequest"
+      },
+      "MembershipRequest": {
+        "properties": {
+          "add_episode_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 10000,
+            "title": "Add Episode Ids"
+          },
+          "remove_episode_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 10000,
+            "title": "Remove Episode Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "MembershipRequest"
+      },
+      "RetryTaskRequest": {
+        "properties": {
+          "expected_run_id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+            "title": "Expected Run Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "expected_run_id"
+        ],
+        "title": "RetryTaskRequest",
+        "description": "Body of ``POST /tasks/{id}/retry`` (DO-A02 C3)."
+      },
+      "SourceType": {
+        "type": "string",
+        "enum": [
+          "LEROBOT_V3",
+          "EGO_MP4",
+          "MCAP_ROS2_PROFILE_V1",
+          "MCAP_ROS2_PROFILE_V2"
+        ],
+        "title": "SourceType"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  },
+  "x-contract-version": "do-agent-contract/2.0.0"
+}

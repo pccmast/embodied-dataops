@@ -1,0 +1,62 @@
+{
+  "data_origin": "synthetic",
+  "fixtures": [
+    {
+      "content_type": "application/vnd.mcap",
+      "data_origin": "synthetic",
+      "expected": {
+        "duration_s": 10.0,
+        "episode_type": "robot_episode",
+        "grid_hz": 10,
+        "normalization_valid": true,
+        "outcome": "quality_pass",
+        "source_type": "MCAP_ROS2_PROFILE_V1",
+        "topics": [
+          "/camera/front/image_raw",
+          "/joint_states",
+          "/policy/action"
+        ],
+        "verdict": "PASS"
+      },
+      "fixture_id": "F05_mcap_good",
+      "generated_by": "fixtures/make_mcap_ros2.py",
+      "kind": "file",
+      "notes": "Synthetic ROS 2 CDR MCAP, fixed topic profile; state/action history starts 200/300 ms before the first camera frame",
+      "path": "fixtures/golden/mcap/F05_mcap_good.mcap",
+      "seed": 20261029,
+      "sha256": "4bfe6c8cd88b26f679b9cc0fb38b92f97e6640c8982602f72946e1ce16e9aa71",
+      "size_bytes": 4930732,
+      "status": "generated"
+    },
+    {
+      "content_type": "application/vnd.mcap",
+      "data_origin": "synthetic",
+      "expected": {
+        "error_rules": [
+          "SYNC_MISSING_STATE"
+        ],
+        "fabricated_samples_allowed": false,
+        "normalization_valid": false,
+        "outcome": "quality_fail",
+        "topics": [
+          "/camera/front/image_raw",
+          "/joint_states",
+          "/policy/action"
+        ],
+        "verdict": "FAIL"
+      },
+      "fixture_id": "F06_mcap_gap",
+      "generated_by": "fixtures/make_mcap_ros2.py",
+      "kind": "file",
+      "notes": "Same profile as F05 but joint-state messages in [2 s, 3 s] are removed; no zero-fill and no future action is allowed, so QC must FAIL",
+      "path": "fixtures/golden/mcap/F06_mcap_gap.mcap",
+      "seed": 20261029,
+      "sha256": "9020b64520dd5dd7dd1824aed47184079843dcf5a584b1413e427ef46d1571f8",
+      "size_bytes": 4920484,
+      "status": "generated"
+    }
+  ],
+  "generated_by": "fixtures/make_mcap_ros2.py",
+  "schema_version": "fixtures-manifest/1.0",
+  "seed": 20261029
+}

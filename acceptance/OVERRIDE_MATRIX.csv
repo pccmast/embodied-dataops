@@ -1,0 +1,12 @@
+﻿override_id,base_reference,old_rule,new_rule,new_test_ids
+OV-01,V1 8.2,VLM MAY,VLM live MUST,V21-07;V21-08;V21-11
+OV-02,V1 6.1,单一 YOLO 主DAG,V2.1 DAG 增分段VLM及合并,V21-07;V21-08
+OV-03,V2 D2-1,6D/7D demo Profile,新增16D/16D和8D/7D真实Profile,V21-03;V21-04;V21-05
+OV-04,V2 2.3,state/action可能等维,状态与动作分别维度/语义,V21-04;V21-06
+OV-05,V2 5;DO-A02,Agent API 联调作为 Gate,保留原子操作安全；Agent 专属工具合同不作为本项目验收,V21-17;V21-23
+OV-06,V2 6,仅真实数据smoke,固定两个真实来源+Ego授权,V21-02;V21-03;V21-25
+OV-07,V2 11,GPU可选,新增交付GPU实验Gate,V21-19
+OV-08,V2 2.4,导出统一state/action dims,分别校验，可不同维度,V21-06;V21-15
+OV-09,V2 5.3,Agent 诊断 API 强制,"可选只读诊断 API, 已有实现保留",V21-23
+OV-10,V2 0,pipeline_version 2.0.0,新运行2.1.0，旧资产冻结,V21-24
+OV-11,DO2-23,Agent 专属 3 个诊断 GET 必做,V2.1 独立 DataOps 无 Agent；延期且明确不能标 PASS,V21-23

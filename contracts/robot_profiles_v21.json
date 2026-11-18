@@ -1,0 +1,1308 @@
+{
+  "schema_version": "robot-profiles/2.1",
+  "profiles": [
+    {
+      "schema_version": "robot-profile/2.1",
+      "profile_id": "arm6_joint_position_v1",
+      "profile_revision": 2,
+      "authority": "SYNTHETIC_FIXTURE",
+      "source_dataset": "generated://fixtures/generate_synthetic.py",
+      "state": {
+        "dimension": 6,
+        "features": [
+          {
+            "name": "joint_1",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_2",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_3",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_4",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_5",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_6",
+            "unit": "rad",
+            "role": "joint"
+          }
+        ],
+        "semantics": "joint_position",
+        "unit": "rad"
+      },
+      "action": {
+        "dimension": 6,
+        "features": [
+          {
+            "name": "joint_1",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_2",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_3",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_4",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_5",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_6",
+            "unit": "rad",
+            "role": "joint"
+          }
+        ],
+        "semantics": "joint_target_position",
+        "unit": "rad"
+      },
+      "limits": {
+        "lower": [
+          -3.14,
+          -3.14,
+          -3.14,
+          -3.14,
+          -3.14,
+          -3.14
+        ],
+        "upper": [
+          3.14,
+          3.14,
+          3.14,
+          3.14,
+          3.14,
+          3.14
+        ],
+        "max_abs_velocity": [
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0
+        ],
+        "continuous": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      "cameras": [
+        "front"
+      ],
+      "optional_cameras": [
+        "wrist"
+      ],
+      "expected_source_cameras": 1,
+      "aligned_fps": 10,
+      "preview_fps": 10,
+      "max_clock_offset_ns": 50000000,
+      "timestamp_alignment": "NATIVE_STREAMS",
+      "semantic_qc_enabled": true,
+      "notes": "V2 revision 1 restated in robot-profile/2.1 form (state_dim == action_dim). Synthetic limit values do not establish a physical robot safety specification."
+    },
+    {
+      "schema_version": "robot-profile/2.1",
+      "profile_id": "arm7_joint_position_v1",
+      "profile_revision": 2,
+      "authority": "SYNTHETIC_FIXTURE",
+      "source_dataset": "generated://fixtures/generate_synthetic.py",
+      "state": {
+        "dimension": 7,
+        "features": [
+          {
+            "name": "joint_1",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_2",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_3",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_4",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_5",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_6",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_7",
+            "unit": "rad",
+            "role": "joint"
+          }
+        ],
+        "semantics": "joint_position",
+        "unit": "rad"
+      },
+      "action": {
+        "dimension": 7,
+        "features": [
+          {
+            "name": "joint_1",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_2",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_3",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_4",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_5",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_6",
+            "unit": "rad",
+            "role": "joint"
+          },
+          {
+            "name": "joint_7",
+            "unit": "rad",
+            "role": "joint"
+          }
+        ],
+        "semantics": "joint_target_position",
+        "unit": "rad"
+      },
+      "limits": {
+        "lower": [
+          -3.14,
+          -3.14,
+          -3.14,
+          -3.14,
+          -3.14,
+          -3.14,
+          -3.14
+        ],
+        "upper": [
+          3.14,
+          3.14,
+          3.14,
+          3.14,
+          3.14,
+          3.14,
+          3.14
+        ],
+        "max_abs_velocity": [
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0,
+          6.0
+        ],
+        "continuous": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      "cameras": [
+        "front"
+      ],
+      "optional_cameras": [
+        "wrist"
+      ],
+      "expected_source_cameras": 1,
+      "aligned_fps": 10,
+      "preview_fps": 10,
+      "max_clock_offset_ns": 50000000,
+      "timestamp_alignment": "NATIVE_STREAMS",
+      "semantic_qc_enabled": true,
+      "notes": "V2 revision 1 restated in robot-profile/2.1 form. Synthetic limit values only."
+    },
+    {
+      "schema_version": "robot-profile/2.1",
+      "profile_id": "agibot_g2_public_v1",
+      "profile_revision": 1,
+      "authority": "SOURCE_DOCUMENTED_PARTIAL",
+      "source_dataset": "zhengfeirao/2026-9-18",
+      "state": {
+        "dimension": 16,
+        "features": [
+          {
+            "name": "state_0",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_1",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_2",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_3",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_4",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_5",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_6",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_7",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_8",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_9",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_10",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_11",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_12",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_13",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_14",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_15",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "unknown_16d_state",
+        "unit": "unknown"
+      },
+      "action": {
+        "dimension": 16,
+        "features": [
+          {
+            "name": "action_0",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_1",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_2",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_3",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_4",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_5",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_6",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_7",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_8",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_9",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_10",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_11",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_12",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_13",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_14",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_15",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "unknown_16d_action",
+        "unit": "unknown"
+      },
+      "cameras": [
+        "front",
+        "wrist"
+      ],
+      "optional_cameras": [],
+      "expected_source_cameras": 3,
+      "aligned_fps": 10,
+      "preview_fps": 10,
+      "max_clock_offset_ns": 50000000,
+      "timestamp_alignment": "NATIVE_STREAMS",
+      "semantic_qc_enabled": false,
+      "notes": "AgiBot G2 public sample: 16D state / 16D action per the dataset card, 3 source cameras. The dataset card states that at least two channels are gripper values; the exact indices and units must be read from meta/agibot_g2_data.json before any role/unit is asserted, so every channel stays role=unknown here. No physical limits are published, therefore physics QC is NOT_APPLICABLE and the publish level is FORMAT_VERIFIED only."
+    },
+    {
+      "schema_version": "robot-profile/2.1",
+      "profile_id": "libero_franka_sim_v1",
+      "profile_revision": 1,
+      "authority": "SOURCE_DOCUMENTED_PARTIAL",
+      "source_dataset": "nvidia/LIBERO_LeRobot_v3:libero_10",
+      "state": {
+        "dimension": 8,
+        "features": [
+          {
+            "name": "state_0",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_1",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_2",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_3",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_4",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_5",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_6",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_7",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "unknown_8d_state",
+        "unit": "unknown"
+      },
+      "action": {
+        "dimension": 7,
+        "features": [
+          {
+            "name": "action_0",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_1",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_2",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_3",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_4",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_5",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_6",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "unknown_7d_action",
+        "unit": "unknown"
+      },
+      "cameras": [
+        "front",
+        "wrist"
+      ],
+      "optional_cameras": [],
+      "expected_source_cameras": 2,
+      "aligned_fps": 20,
+      "preview_fps": 20,
+      "max_clock_offset_ns": 50000000,
+      "timestamp_alignment": "SOURCE_ROW_ALIGNED",
+      "semantic_qc_enabled": false,
+      "notes": "LIBERO libero_10: state[8] / action[7] per the release card, 2 cameras, 20 FPS. state[8] must not be read as eight joints and action[7] must not be read as seven target joint positions; units and semantics are undocumented, so this profile may only reach FORMAT_VERIFIED."
+    },
+    {
+      "schema_version": "robot-profile/2.1",
+      "profile_id": "utokyo_xarm_pick_and_place_v1",
+      "profile_revision": 1,
+      "authority": "SOURCE_DOCUMENTED_PARTIAL",
+      "source_dataset": "lerobot/utokyo_xarm_pick_and_place@da56c23e1b6d32c101c300b85dc54288b53ea63c",
+      "state": {
+        "dimension": 8,
+        "features": [
+          {
+            "name": "motor_0",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_1",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_2",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_3",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_4",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_5",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_6",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_7",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "unknown_8d_state",
+        "unit": "unknown"
+      },
+      "action": {
+        "dimension": 7,
+        "features": [
+          {
+            "name": "motor_0",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_1",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_2",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_3",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_4",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_5",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_6",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "unknown_7d_action",
+        "unit": "unknown"
+      },
+      "cameras": [
+        "front",
+        "wrist"
+      ],
+      "optional_cameras": [],
+      "expected_source_cameras": 3,
+      "aligned_fps": 10,
+      "preview_fps": 10,
+      "max_clock_offset_ns": 50000000,
+      "timestamp_alignment": "SOURCE_ROW_ALIGNED",
+      "semantic_qc_enabled": false,
+      "notes": "Real public dataset already present under public-data/: state[8] names motor_0..motor_7, action[7] names motor_0..motor_6, 3 camera features, 10 fps, 224x224, apache-2.0. Used to prove unequal state/action dimensions on real bytes. Measured over all 7490 rows of data/chunk-000/file-000.parquet: observation.state[6] and observation.state[7] are constant 0.0 (min == max == 0.0, zero variance), so those two dimensions are labelled 全零常数维/疑似占位/语义待确认 — they carry no information, must not be read as joints, and are not evidence for any unit or role. Units and action semantics are not documented by the dataset card, so FORMAT_VERIFIED only."
+    },
+    {
+      "schema_version": "robot-profile/2.1",
+      "profile_id": "utokyo_xarm_pick_and_place_v1",
+      "profile_revision": 2,
+      "authority": "SOURCE_DOCUMENTED_PARTIAL",
+      "source_dataset": "lerobot/utokyo_xarm_pick_and_place@da56c23e1b6d32c101c300b85dc54288b53ea63c",
+      "state": {
+        "dimension": 8,
+        "features": [
+          {
+            "name": "motor_0",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_1",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_2",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_3",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_4",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_5",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_6",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_7",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "unknown_8d_state",
+        "unit": "unknown"
+      },
+      "action": {
+        "dimension": 7,
+        "features": [
+          {
+            "name": "motor_0",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_1",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_2",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_3",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_4",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_5",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "motor_6",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "joint_target_position",
+        "unit": "unknown"
+      },
+      "cameras": [
+        "front",
+        "wrist"
+      ],
+      "optional_cameras": [],
+      "expected_source_cameras": 3,
+      "aligned_fps": 10,
+      "preview_fps": 10,
+      "max_clock_offset_ns": 50000000,
+      "timestamp_alignment": "SOURCE_ROW_ALIGNED",
+      "semantic_qc_enabled": false,
+      "notes": "utokyo xarm pick-and-place rev2. Only the action-level semantics is raised: action = joint_target_position. Basis 1 (documentation): the dataset is an xArm 7 demonstration set whose state/action channels are the leader-arm motor commands; this was NOT re-verified against an offline copy of the dataset card on this host. Basis 2 (data behaviour, recomputed over all 7490 rows of data/chunk-000/*.parquet): corr(action,state) mean 0.8656; MAD(action[t],state[t+1])=0.1236 vs MAD(action[t],state[t])=0.1445, a 14% gap, i.e. action leads the state in the next-step direction; both ranges are [-3.141, 3.141], consistent with joint angles in radians but NOT a unit measurement. Known defect carried forward: observation.state[6] and observation.state[7] are constant 0.0 across all rows (placeholder), so state_dim=8 overstates real information and action stays 7D. Units and per-channel roles stay unknown. authority stays SOURCE_DOCUMENTED_PARTIAL (FORMAT_VERIFIED, research snapshot)."
+    },
+    {
+      "schema_version": "robot-profile/2.1",
+      "profile_id": "aloha_sim_transfer_cube_human_v1",
+      "profile_revision": 1,
+      "authority": "SOURCE_DOCUMENTED_PARTIAL",
+      "source_dataset": "lerobot/aloha_sim_transfer_cube_human@6a43d500f101255823a9d2b9dc244eeb01a2cd31",
+      "state": {
+        "dimension": 14,
+        "features": [
+          {
+            "name": "state_0",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_1",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_2",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_3",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_4",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_5",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_6",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_7",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_8",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_9",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_10",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_11",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_12",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "state_13",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "unknown_14d_state",
+        "unit": "unknown"
+      },
+      "action": {
+        "dimension": 14,
+        "features": [
+          {
+            "name": "action_0",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_1",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_2",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_3",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_4",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_5",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_6",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_7",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_8",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_9",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_10",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_11",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_12",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "action_13",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "unknown_14d_action",
+        "unit": "unknown"
+      },
+      "cameras": [
+        "front"
+      ],
+      "optional_cameras": [],
+      "expected_source_cameras": 1,
+      "aligned_fps": 50,
+      "preview_fps": 10,
+      "max_clock_offset_ns": 50000000,
+      "timestamp_alignment": "SOURCE_ROW_ALIGNED",
+      "semantic_qc_enabled": false,
+      "notes": "ALOHA sim transfer_cube_human: state[14] / action[14] per the dataset card, one source video feature (observation.images.top, 640x480, av1, 50 fps) mapped to the canonical front camera, 50 episodes / 20000 frames, apache-2.0. The card publishes neither channel names nor units nor physical limits, so every channel stays unit=unknown / role=unknown and physics QC is NOT_APPLICABLE. Measured on all 20000 rows (data/chunk-000/*.parquet): no all-zero or constant channel in either modality, so unlike utokyo there is no placeholder dimension to flag. FORMAT_VERIFIED only."
+    },
+    {
+      "schema_version": "robot-profile/2.1",
+      "profile_id": "aloha_sim_transfer_cube_human_v1",
+      "profile_revision": 2,
+      "authority": "SOURCE_DOCUMENTED_PARTIAL",
+      "source_dataset": "lerobot/aloha_sim_transfer_cube_human@6a43d500f101255823a9d2b9dc244eeb01a2cd31",
+      "state": {
+        "dimension": 14,
+        "features": [
+          {
+            "name": "left_waist",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_shoulder",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_elbow",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_forearm_roll",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_wrist_angle",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_wrist_rotate",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_gripper",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_waist",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_shoulder",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_elbow",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_forearm_roll",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_wrist_angle",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_wrist_rotate",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_gripper",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "unknown_14d_state",
+        "unit": "unknown"
+      },
+      "action": {
+        "dimension": 14,
+        "features": [
+          {
+            "name": "left_waist",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_shoulder",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_elbow",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_forearm_roll",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_wrist_angle",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_wrist_rotate",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_gripper",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_waist",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_shoulder",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_elbow",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_forearm_roll",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_wrist_angle",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_wrist_rotate",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_gripper",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "unknown_14d_action",
+        "unit": "unknown"
+      },
+      "cameras": [
+        "front"
+      ],
+      "optional_cameras": [],
+      "expected_source_cameras": 1,
+      "aligned_fps": 50,
+      "preview_fps": 10,
+      "max_clock_offset_ns": 50000000,
+      "timestamp_alignment": "SOURCE_ROW_ALIGNED",
+      "semantic_qc_enabled": false,
+      "notes": "ALOHA sim transfer_cube_human: state[14] / action[14], one source video (observation.images.top, 640x480, av1, 50 fps) mapped to the canonical front camera, 50 episodes / 20000 frames, apache-2.0. Revision 2 uses the channel names published by the dataset card (state and action share left_waist..right_gripper), which revision 1 did not carry; the card still documents NO units, NO physical limits and NO action definition, so every channel stays unit=unknown / role=unknown and physics QC is NOT_APPLICABLE. A published channel name is not semantic evidence: authority therefore stays SOURCE_DOCUMENTED_PARTIAL (FORMAT_VERIFIED, research snapshot only). Measured on all 20000 rows: no all-zero or constant channel in either modality. FORMAT_VERIFIED only."
+    },
+    {
+      "schema_version": "robot-profile/2.1",
+      "profile_id": "aloha_sim_transfer_cube_human_v1",
+      "profile_revision": 3,
+      "authority": "SOURCE_DOCUMENTED_PARTIAL",
+      "source_dataset": "lerobot/aloha_sim_transfer_cube_human@6a43d500f101255823a9d2b9dc244eeb01a2cd31",
+      "state": {
+        "dimension": 14,
+        "features": [
+          {
+            "name": "left_waist",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_shoulder",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_elbow",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_forearm_roll",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_wrist_angle",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_wrist_rotate",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_gripper",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_waist",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_shoulder",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_elbow",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_forearm_roll",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_wrist_angle",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_wrist_rotate",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_gripper",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "unknown_14d_state",
+        "unit": "unknown"
+      },
+      "action": {
+        "dimension": 14,
+        "features": [
+          {
+            "name": "left_waist",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_shoulder",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_elbow",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_forearm_roll",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_wrist_angle",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_wrist_rotate",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "left_gripper",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_waist",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_shoulder",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_elbow",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_forearm_roll",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_wrist_angle",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_wrist_rotate",
+            "unit": "unknown",
+            "role": "unknown"
+          },
+          {
+            "name": "right_gripper",
+            "unit": "unknown",
+            "role": "unknown"
+          }
+        ],
+        "semantics": "joint_target_position",
+        "unit": "unknown"
+      },
+      "cameras": [
+        "front"
+      ],
+      "optional_cameras": [],
+      "expected_source_cameras": 1,
+      "aligned_fps": 50,
+      "preview_fps": 10,
+      "max_clock_offset_ns": 50000000,
+      "timestamp_alignment": "SOURCE_ROW_ALIGNED",
+      "semantic_qc_enabled": false,
+      "notes": "ALOHA sim transfer_cube_human rev3. Only the action-level semantics is raised: action = joint_target_position. Basis 1 (documentation): the ACT paper (arXiv 2304.13705) describes ALOHA teleoperation actions as joint position targets; this was NOT re-verified against the paper text on this host. Basis 2 (data behaviour, recomputed over all 20000 rows of data/chunk-000/*.parquet): corr(action,state) per channel 0.9856-0.9991; MAD(action[t],state[t+1])=0.0325 vs MAD(action[t],state[t])=0.0349, i.e. action tracks the next state slightly better than the current one; ranges state [-1.444,1.296] action [-1.445,1.293], outside [-1,1], so the labels are not normalised. This is medium-strength evidence, not proof: the 0.003 gap is small. Units stay unit=unknown because range agreement is not a unit measurement, and per-channel role stays unknown. state.semantics stays unknown_14d_state. authority stays SOURCE_DOCUMENTED_PARTIAL (FORMAT_VERIFIED), so the version must still be published as a research snapshot; only the training feature gate is satisfied."
+    }
+  ]
+}

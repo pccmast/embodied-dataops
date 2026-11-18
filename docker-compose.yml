@@ -1,0 +1,286 @@
+# Embodied DataOps — single-host development stack.
+# `make up` starts everything; all images are pinned (see infra/versions.lock).
+# No image uses the `latest` tag.
+
+name: embodied-dataops
+
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  env_file:
+    - .env
+  networks:
+    - dataops
+
+# Container-internal endpoints.  The host `.env` deliberately uses
+# localhost:5432/6379/9000 so the same file works for host-side CLI runs;
+# compose services must talk to the compose service names instead.
+x-app-env: &app-env
+  DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-dataops}:${POSTGRES_PASSWORD:-dataops}@db:5432/${POSTGRES_DB:-dataops}
+  REDIS_URL: redis://redis:6379/0
+  S3_ENDPOINT_INTERNAL: http://minio:9000
+
+services:
+  db:
+    image: postgres:16.10-alpine
+    container_name: dataops-db
+    <<: *service-defaults
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dataops}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dataops}
+      POSTGRES_DB: ${POSTGRES_DB:-dataops}
+    ports:
+      - "${DATAOPS_BIND_ADDR:-127.0.0.1}:5432:5432"
+    volumes:
+      - dataops-db:/var/lib/postgresql/data
+      - ./infra/db/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dataops} -d ${POSTGRES_DB:-dataops}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7.4.5-alpine
+    container_name: dataops-redis
+    <<: *service-defaults
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory-policy", "noeviction"]
+    ports:
+      - "${DATAOPS_BIND_ADDR:-127.0.0.1}:6379:6379"
+    volumes:
+      - dataops-redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    # MinIO stopped publishing official Docker Hub images (upstream image removed
+    # in 2026); PGSTY Silo is the API/environment-compatible community fork.
+    # Pinned by release tag; digest recorded in infra/versions.lock.
+    image: pgsty/silo:RELEASE.2026-10-26T00-00-00Z
+    container_name: dataops-minio
+    <<: *service-defaults
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY:-dataops}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY:-dataops-secret}
+    ports:
+      - "${DATAOPS_BIND_ADDR:-127.0.0.1}:9000:9000"
+      - "${DATAOPS_BIND_ADDR:-127.0.0.1}:9001:9001"
+    volumes:
+      - dataops-minio:/data
+    healthcheck:
+      test: ["CMD", "silo", "healthcheck", "live"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    build:
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+      args:
+        UV_DEFAULT_INDEX: ${UV_DEFAULT_INDEX:-https://pypi.org/simple}
+        PYPI_INDEX_URL: ${PYPI_INDEX_URL:-https://pypi.org/simple}
+    container_name: dataops-migrate
+    <<: *service-defaults
+    environment:
+      <<: *app-env
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+      args:
+        UV_DEFAULT_INDEX: ${UV_DEFAULT_INDEX:-https://pypi.org/simple}
+        PYPI_INDEX_URL: ${PYPI_INDEX_URL:-https://pypi.org/simple}
+    container_name: dataops-api
+    <<: *service-defaults
+    environment:
+      <<: *app-env
+    command: ["uvicorn", "embodied_dataops.api.app:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "${DATAOPS_BIND_ADDR:-127.0.0.1}:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=3).status==200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  dispatcher:
+    build:
+      context: .
+      dockerfile: infra/docker/api.Dockerfile
+      args:
+        UV_DEFAULT_INDEX: ${UV_DEFAULT_INDEX:-https://pypi.org/simple}
+        PYPI_INDEX_URL: ${PYPI_INDEX_URL:-https://pypi.org/simple}
+    container_name: dataops-dispatcher
+    <<: *service-defaults
+    environment:
+      <<: *app-env
+    command: ["python", "-m", "embodied_dataops.workflow.dispatcher"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  worker-cpu:
+    build:
+      context: .
+      dockerfile: infra/docker/cpu_worker.Dockerfile
+      args:
+        UV_DEFAULT_INDEX: ${UV_DEFAULT_INDEX:-https://pypi.org/simple}
+        PYPI_INDEX_URL: ${PYPI_INDEX_URL:-https://pypi.org/simple}
+        INSTALL_LEROBOT: ${INSTALL_LEROBOT:-1}
+        INSTALL_VISION: ${INSTALL_VISION:-1}
+        # LeRobot 的 torchcodec 需要系统 FFmpeg 共享库（libavcodec/libavformat/libavutil），
+        # imageio-ffmpeg 的静态二进制不满足；训练/评估前把 INSTALL_SYSTEM_FFMPEG=1。
+        INSTALL_SYSTEM_FFMPEG: ${INSTALL_SYSTEM_FFMPEG:-0}
+    container_name: dataops-worker-cpu
+    <<: *service-defaults
+    environment:
+      <<: *app-env
+    command: ["python", "-m", "embodied_dataops.workflow.worker", "--pool", "cpu", "--concurrency", "${WORKER_CPU_CONCURRENCY:-2}"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - dataops-scratch:/var/lib/dataops/scratch
+
+  worker-vision:
+    build:
+      context: .
+      dockerfile: infra/docker/cpu_worker.Dockerfile
+      args:
+        UV_DEFAULT_INDEX: ${UV_DEFAULT_INDEX:-https://pypi.org/simple}
+        PYPI_INDEX_URL: ${PYPI_INDEX_URL:-https://pypi.org/simple}
+        INSTALL_LEROBOT: ${INSTALL_LEROBOT:-1}
+        INSTALL_VISION: ${INSTALL_VISION:-1}
+        # 同上：ACT 训练/评估要解码视频，torchcodec 依赖系统 FFmpeg 共享库。
+        INSTALL_SYSTEM_FFMPEG: ${INSTALL_SYSTEM_FFMPEG:-0}
+    container_name: dataops-worker-vision
+    <<: *service-defaults
+    environment:
+      <<: *app-env
+      # Real YOLO weights come from the read-only mount below; the detector stays
+      # `fake` unless the operator sets DETECTOR=yolo11n and a weights SHA.
+      DETECTOR: ${DETECTOR:-fake}
+      YOLO_WEIGHTS_PATH: /app/var/models/yolo11n.pt
+      YOLO_DEVICE: ${YOLO_DEVICE:-cpu}
+    command: ["python", "-m", "embodied_dataops.workflow.worker", "--pool", "vision", "--concurrency", "${WORKER_VISION_CONCURRENCY:-1}"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - dataops-scratch:/var/lib/dataops/scratch
+      # Weights are not baked into the image (licence + size); they are mounted so
+      # `DETECTOR=yolo11n` can actually find a model file.  Read-only by design.
+      - ./var/models:/app/var/models:ro
+
+  worker-ros2:
+    build:
+      context: .
+      dockerfile: infra/docker/ros_worker.Dockerfile
+      args:
+        PYPI_INDEX_URL: ${PYPI_INDEX_URL:-https://pypi.org/simple}
+        UV_DEFAULT_INDEX: ${UV_DEFAULT_INDEX:-https://pypi.org/simple}
+    container_name: dataops-worker-ros2
+    <<: *service-defaults
+    # No published ports: the ROS worker must not expose a public interface.
+    environment:
+      <<: *app-env
+    command: ["python3", "-m", "embodied_dataops.workflow.worker", "--pool", "ros2", "--concurrency", "1"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    profiles: ["ros"]
+
+  ui:
+    build:
+      context: .
+      dockerfile: infra/docker/ui.Dockerfile
+      args:
+        UV_DEFAULT_INDEX: ${UV_DEFAULT_INDEX:-https://pypi.org/simple}
+        PYPI_INDEX_URL: ${PYPI_INDEX_URL:-https://pypi.org/simple}
+    container_name: dataops-ui
+    <<: *service-defaults
+    environment:
+      <<: *app-env
+      # Inside the container "localhost" is the UI container itself, not the API.
+      # The host `.env` keeps localhost:8000 for host-side runs; compose overrides it.
+      UI_API_BASE_URL: http://api:8000
+      API_PUBLIC_BASE_URL: ${API_PUBLIC_BASE_URL:-http://localhost:8000}
+    command: ["streamlit", "run", "src/embodied_ui/app.py", "--server.port", "8501", "--server.address", "0.0.0.0", "--server.headless", "true"]
+    ports:
+      - "${DATAOPS_BIND_ADDR:-127.0.0.1}:8501:8501"
+    depends_on:
+      api:
+        condition: service_healthy
+    profiles: ["ui"]
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    container_name: dataops-prometheus
+    <<: *service-defaults
+    volumes:
+      - ./infra/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - dataops-prometheus:/prometheus
+    ports:
+      - "${DATAOPS_BIND_ADDR:-127.0.0.1}:9090:9090"
+    profiles: ["monitoring"]
+
+  grafana:
+    image: grafana/grafana:12.2.0
+    container_name: dataops-grafana
+    <<: *service-defaults
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: dataops
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./infra/grafana:/etc/grafana/provisioning:ro
+      - dataops-grafana:/var/lib/grafana
+    ports:
+      - "${DATAOPS_BIND_ADDR:-127.0.0.1}:3000:3000"
+    profiles: ["monitoring"]
+
+volumes:
+  dataops-db:
+  dataops-redis:
+  dataops-minio:
+  dataops-prometheus:
+  dataops-grafana:
+  dataops-scratch:
+
+networks:
+  dataops:
+    driver: bridge

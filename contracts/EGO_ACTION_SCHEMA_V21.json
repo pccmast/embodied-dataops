@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/contracts/ego-action-candidates-2.1.schema.json",
+  "title": "EgoActionCandidatesV2.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "clip_start_ns",
+    "clip_end_ns",
+    "actions",
+    "insufficient_evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ego-action-candidates/2.1"
+    },
+    "clip_start_ns": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "clip_end_ns": {
+      "type": "integer",
+      "exclusiveMinimum": 0
+    },
+    "insufficient_evidence": {
+      "type": "boolean"
+    },
+    "actions": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "verb",
+          "noun",
+          "start_ns",
+          "end_ns",
+          "evidence_frame_indices",
+          "uncertainty"
+        ],
+        "properties": {
+          "verb": {
+            "enum": [
+              "pick_up",
+              "put_down",
+              "move",
+              "open",
+              "close",
+              "pour",
+              "cut",
+              "other",
+              "uncertain"
+            ]
+          },
+          "noun": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$"
+          },
+          "start_ns": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end_ns": {
+            "type": "integer",
+            "exclusiveMinimum": 0
+          },
+          "evidence_frame_indices": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "uncertainty": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "insufficient_evidence": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "actions": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "insufficient_evidence": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "actions": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

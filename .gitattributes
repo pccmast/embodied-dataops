@@ -1,0 +1,18 @@
+* text=auto eol=lf
+
+*.py    text diff=python
+*.md    text
+*.toml  text
+*.yml   text
+*.yaml  text
+*.json  text
+*.csv   text
+
+*.mp4       binary -diff
+*.mcap      binary -diff
+*.gz        binary -diff
+*.pt        binary -diff
+*.safetensors binary -diff
+*.pdf       binary -diff
+
+uv.lock linguist-generated=true

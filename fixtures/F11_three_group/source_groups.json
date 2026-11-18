@@ -1,0 +1,35 @@
+{
+  "groups": [
+    {
+      "episode_ids": [
+        "episode_0"
+      ],
+      "evidence": {
+        "note": "synthetic three-group episode 0",
+        "session_keys": []
+      },
+      "group_id": "g_0"
+    },
+    {
+      "episode_ids": [
+        "episode_1"
+      ],
+      "evidence": {
+        "note": "synthetic three-group episode 1",
+        "session_keys": []
+      },
+      "group_id": "g_1"
+    },
+    {
+      "episode_ids": [
+        "episode_2"
+      ],
+      "evidence": {
+        "note": "synthetic three-group episode 2",
+        "session_keys": []
+      },
+      "group_id": "g_2"
+    }
+  ],
+  "schema_version": "training-source-groups/1.0"
+}

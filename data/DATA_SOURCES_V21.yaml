@@ -1,0 +1,70 @@
+schema_version: data-sources/2.1
+selection_rule: Use EGO_EPIC if legally accessible; otherwise EGO_AUTHORIZED_FALLBACK;
+  never infer source action truth
+sources:
+- key: AGIBOT_G2
+  source_kind: PUBLIC_REAL_ROBOT
+  repo_id: zhengfeirao/2026-9-18
+  subdir: null
+  dataset_format: lerobot-v3
+  license_claim: apache-2.0 (dataset card; verify current revision)
+  required_for_full: true
+  min_episodes: 2
+  expected_state_dim: 16
+  expected_action_dim: 16
+  expected_cameras: 3
+  revision: PIN_AT_FIRST_FETCH
+  download_status: NOT_RUN
+  sha256: GENERATE_AFTER_FETCH
+  egress_allowed: false
+- key: LIBERO10
+  source_kind: PUBLIC_SIMULATION
+  repo_id: nvidia/LIBERO_LeRobot_v3
+  subdir: libero_10
+  dataset_format: lerobot-v3
+  license_claim: OpenMDW 1.1 (dataset card; verify terms)
+  required_for_full: true
+  min_episodes: 2
+  expected_state_dim: 8
+  expected_action_dim: 7
+  expected_cameras: 2
+  revision: PIN_AT_FIRST_FETCH
+  download_status: NOT_RUN
+  sha256: GENERATE_AFTER_FETCH
+  egress_allowed: false
+- key: EGO_EPIC
+  source_kind: PUBLIC_HUMAN_EGO
+  repo_id: EPIC-KITCHENS-100
+  subdir: null
+  dataset_format: mp4 + official actions csv
+  license_claim: License/access review required; no redistribution assumed
+  required_for_full: false
+  min_clips: 5
+  revision: PIN_AT_FIRST_FETCH
+  download_status: NOT_RUN
+  sha256: GENERATE_AFTER_FETCH
+  egress_allowed: false
+- key: EGO_AUTHORIZED_FALLBACK
+  source_kind: USER_AUTHORIZED
+  repo_id: local://ego-authorized
+  subdir: null
+  dataset_format: mp4 + manually audited action labels
+  license_claim: Explicit authorization and model egress approval required
+  required_for_full: true
+  min_clips: 5
+  revision: SOURCE_FILE_SHA
+  download_status: NOT_RUN
+  sha256: GENERATE_AFTER_FETCH
+  egress_allowed: false
+- key: MCAP_FIXTURE
+  source_kind: SYNTHETIC_FIXTURE
+  repo_id: generated://ros2-jazzy
+  subdir: null
+  dataset_format: rosbag2-mcap
+  license_claim: project-created fixture
+  required_for_full: true
+  min_files: 5
+  revision: FIXTURE_GENERATOR_SHA
+  download_status: NOT_RUN
+  sha256: GENERATE_AFTER_FETCH
+  egress_allowed: false

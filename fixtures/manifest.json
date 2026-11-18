@@ -1,0 +1,314 @@
+{
+  "data_origin": "synthetic",
+  "fixtures": [
+    {
+      "artifacts": [
+        {
+          "path": "fixtures/generate/F01_good_lerobot.tar.gz",
+          "sha256": "9b90695ab09e2718780249cf2a4bf10d7e5d272e2af0d8ee8c2f3e22a8766954",
+          "size_bytes": 286594
+        }
+      ],
+      "content_type": "application/x-directory",
+      "data_origin": "synthetic",
+      "expected": {
+        "action_dim": 6,
+        "episode_count": 2,
+        "fps": 10,
+        "outcome": "official LeRobot v3 import: exactly 2 episodes, 2x100 samples at 10 Hz, 6D state/action, QC PASS",
+        "samples_per_episode": 100,
+        "state_dim": 6
+      },
+      "extra": {
+        "writer": "reused existing official dataset",
+        "writer_mode": "n/a"
+      },
+      "fixture_id": "F01_good_lerobot",
+      "generated_by": "fixtures/generate_synthetic.py",
+      "kind": "directory",
+      "notes": "created with the official lerobot==0.4.4 Writer",
+      "path": "fixtures/generate/F01_good_lerobot",
+      "seed": 20261029,
+      "sha256": "0155662bcf1167caf370a4dcee45a20bddec1477a7455d16e0668dbc7ebe6bb7",
+      "size_bytes": 374173,
+      "status": "generated"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "fixtures/generate/F02_bad_timestamps.tar.gz",
+          "sha256": "0c1ef50ac7c88641793b1c9d757be8d7ec49669172517fbbe7ec59afb95d4cfe",
+          "size_bytes": 288276
+        }
+      ],
+      "content_type": "application/x-directory",
+      "data_origin": "synthetic",
+      "expected": {
+        "outcome": "TIMESTAMP_NON_MONOTONIC ERROR, no silent repair, not publishable",
+        "quality_rule": "TIMESTAMP_NON_MONOTONIC"
+      },
+      "extra": {
+        "corruption_strategy": "set episode 0 frame 50 timestamp equal to frame 49 (<= inversion, no repair applied)"
+      },
+      "fixture_id": "F02_bad_timestamps",
+      "generated_by": "fixtures/generate_synthetic.py",
+      "kind": "directory",
+      "notes": "derived from F01: t_ns[50] <= t_ns[49] in episode 0",
+      "path": "fixtures/generate/F02_bad_timestamps",
+      "seed": 20261029,
+      "sha256": "18257833967fadfed75968a8efbd2c7a0b27d08a4b4d2e07275bbf552cc167ef",
+      "size_bytes": 372206,
+      "status": "generated"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "fixtures/generate/F03_bad_dims.tar.gz",
+          "sha256": "d82a1fe4848a4f646e35239754a007130f398a8795cd460295625af08c0acce4",
+          "size_bytes": 287355
+        }
+      ],
+      "content_type": "application/x-directory",
+      "data_origin": "synthetic",
+      "expected": {
+        "outcome": "DIMENSION_MISMATCH ERROR for 5D action, no truncation/zero-fill",
+        "quality_rule": "DIMENSION_MISMATCH"
+      },
+      "extra": {
+        "corruption_strategy": "rewrote action to 5D in meta/info.json, data parquet and stats"
+      },
+      "fixture_id": "F03_bad_dims",
+      "generated_by": "fixtures/generate_synthetic.py",
+      "kind": "directory",
+      "notes": "derived from F01: action schema rewritten to 5D",
+      "path": "fixtures/generate/F03_bad_dims",
+      "seed": 20261029,
+      "sha256": "2c7f2f8f475ba166be405a8e2c126aedbf1edd6e3d4d54511035f83a82149afb",
+      "size_bytes": 367406,
+      "status": "generated"
+    },
+    {
+      "content_type": "video/mp4",
+      "data_origin": "synthetic",
+      "expected": {
+        "duration_ns": 10000000000,
+        "episode_type": "ego_video_episode",
+        "has_action": false,
+        "has_state": false,
+        "outcome": "EGO_MP4 import: ego_video_episode, 100 samples at 10 Hz (0-9.9 s), no state/action",
+        "sample_count": 100
+      },
+      "extra": {
+        "encoder": "ffmpeg-libx264",
+        "fps": 30,
+        "frames": 300,
+        "height": 480,
+        "sharpness_estimate": {
+          "blurry_ratio": 0.0,
+          "mean_laplacian_variance": 540.4941616846779,
+          "sampled_frames": 10
+        },
+        "width": 640
+      },
+      "fixture_id": "F04_ego_video",
+      "generated_by": "fixtures/generate_synthetic.py",
+      "kind": "file",
+      "notes": "10 s / 30 fps / 640x480 synthetic sharp video",
+      "path": "fixtures/generate/F04_ego_video.mp4",
+      "seed": 20261029,
+      "sha256": "4dbf4c5abe942defb49e0ae8782760081aad55f51b561416b4d734c9f60bd6aa",
+      "size_bytes": 201905,
+      "status": "generated"
+    },
+    {
+      "content_type": "application/vnd.mcap",
+      "data_origin": "synthetic",
+      "expected": {
+        "duration_s": 10.0,
+        "episode_type": "robot_episode",
+        "grid_hz": 10,
+        "normalization_valid": true,
+        "outcome": "quality_pass",
+        "source_type": "MCAP_ROS2_PROFILE_V1",
+        "topics": [
+          "/camera/front/image_raw",
+          "/joint_states",
+          "/policy/action"
+        ],
+        "verdict": "PASS"
+      },
+      "fixture_id": "F05_mcap_good",
+      "generated_by": "fixtures/make_mcap_ros2.py",
+      "kind": "file",
+      "notes": "Synthetic ROS 2 CDR MCAP, fixed topic profile; state/action history starts 200/300 ms before the first camera frame",
+      "path": "fixtures/golden/mcap/F05_mcap_good.mcap",
+      "seed": 20261029,
+      "sha256": "4bfe6c8cd88b26f679b9cc0fb38b92f97e6640c8982602f72946e1ce16e9aa71",
+      "size_bytes": 4930732,
+      "status": "generated"
+    },
+    {
+      "content_type": "application/vnd.mcap",
+      "data_origin": "synthetic",
+      "expected": {
+        "error_rules": [
+          "SYNC_MISSING_STATE"
+        ],
+        "fabricated_samples_allowed": false,
+        "normalization_valid": false,
+        "outcome": "quality_fail",
+        "topics": [
+          "/camera/front/image_raw",
+          "/joint_states",
+          "/policy/action"
+        ],
+        "verdict": "FAIL"
+      },
+      "fixture_id": "F06_mcap_gap",
+      "generated_by": "fixtures/make_mcap_ros2.py",
+      "kind": "file",
+      "notes": "Same profile as F05 but joint-state messages in [2 s, 3 s] are removed; no zero-fill and no future action is allowed, so QC must FAIL",
+      "path": "fixtures/golden/mcap/F06_mcap_gap.mcap",
+      "seed": 20261029,
+      "sha256": "9020b64520dd5dd7dd1824aed47184079843dcf5a584b1413e427ef46d1571f8",
+      "size_bytes": 4920484,
+      "status": "generated"
+    },
+    {
+      "content_type": "video/mp4",
+      "data_origin": "synthetic",
+      "expected": {
+        "error_code": "FILE_DECODE_ERROR",
+        "outcome": "FILE_DECODE_ERROR ERROR finding, import rejected; internal paths not leaked"
+      },
+      "extra": {
+        "source_size_bytes": 201905,
+        "truncated_bytes": 111047
+      },
+      "fixture_id": "F07_corrupt_mp4",
+      "generated_by": "fixtures/generate_synthetic.py",
+      "kind": "file",
+      "notes": "truncated copy of F04 at 111047/201905 bytes",
+      "path": "fixtures/generate/F07_corrupt_mp4.mp4",
+      "seed": 20261029,
+      "sha256": "1be94acf6f0a7ac0a0c19bdabb50e905a53bc25942a2914e168268e252f606c8",
+      "size_bytes": 111047,
+      "status": "generated"
+    },
+    {
+      "content_type": "application/gzip",
+      "data_origin": "synthetic",
+      "expected": {
+        "error_code": "UNSAFE_ARCHIVE",
+        "escape_member": "../escape.txt",
+        "outcome": "422 UNSAFE_ARCHIVE, no file written outside the extraction directory"
+      },
+      "fixture_id": "F08_bad_tar",
+      "generated_by": "fixtures/generate_synthetic.py",
+      "kind": "file",
+      "notes": "malicious .tar.gz with a path-traversal member",
+      "path": "fixtures/generate/F08_bad_tar.tar.gz",
+      "seed": 20261029,
+      "sha256": "8504cdde7d92e78ce81aa22d3638c4a37f386fc0c44e8f397734a1aac58b7a2c",
+      "size_bytes": 329,
+      "status": "generated"
+    },
+    {
+      "content_type": "application/json",
+      "data_origin": "synthetic",
+      "expected": {
+        "outcome": "exactly one CollectionOrder for transparent_cup_low_light with requested_count=36",
+        "rule": "trials>=20 and success_rate<0.80 -> max(20, 2*(trials-successes))"
+      },
+      "fixture_id": "F09_fake_eval",
+      "generated_by": "fixtures/generate_synthetic.py",
+      "kind": "file",
+      "notes": "",
+      "path": "fixtures/golden/F09_fake_eval.json",
+      "seed": 20261029,
+      "sha256": "993df3f1f14528adaaeb13977af47e426a759dce072a5c5e3211d24dea7e3ca3",
+      "size_bytes": 326,
+      "status": "generated"
+    },
+    {
+      "content_type": "video/mp4",
+      "data_origin": "synthetic",
+      "expected": {
+        "outcome": "BLUR_FRAME_RATE WARN (>30% of frames with 640x480 gray Laplacian variance < 40)",
+        "quality_rule": "BLUR_FRAME_RATE",
+        "severity": "WARN"
+      },
+      "extra": {
+        "blur_estimate": {
+          "blurry_ratio": 1.0,
+          "mean_laplacian_variance": 0.058562394978496565,
+          "sampled_frames": 10
+        },
+        "encoder": "ffmpeg-libx264",
+        "fps": 30,
+        "frames": 300
+      },
+      "fixture_id": "F10_blurry_video",
+      "generated_by": "fixtures/generate_synthetic.py",
+      "kind": "file",
+      "notes": "10 s / 30 fps / 640x480 synthetically blurred video",
+      "path": "fixtures/generate/F10_blurry_video.mp4",
+      "seed": 20261029,
+      "sha256": "5f5a90712b4292af68e26d33bbff3d10d40b7368ea8eeebefa1c698cb7b7cd5c",
+      "size_bytes": 212633,
+      "status": "generated"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "fixtures/generate/F11_three_group.tar.gz",
+          "sha256": "451f7cd4b30918b07c19c5ecc2478e1e1889b06285803a76ad98053d33863e2b",
+          "size_bytes": 489959
+        }
+      ],
+      "content_type": "application/x-directory",
+      "data_origin": "synthetic",
+      "expected": {
+        "action_dim": 6,
+        "episode_count": 3,
+        "fps": 10,
+        "groups": {
+          "g_0": "train",
+          "g_1": "val",
+          "g_2": "test"
+        },
+        "outcome": "official LeRobot v3 three-group normal path: 3 independent episodes of 120 frames at 10 Hz, one source group each, assigned to train/val/test",
+        "samples_per_episode": 120,
+        "state_dim": 6
+      },
+      "extra": {
+        "action_dim": 6,
+        "determinism_note": "the official Writer encodes videos with PyAV/SVT-AV1; logical content and metadata are stable, raw video bytes may differ across encoder builds",
+        "episodes": 3,
+        "fps": 10,
+        "frames_per_episode": 120,
+        "groups": {
+          "g_0": "train",
+          "g_1": "val",
+          "g_2": "test"
+        },
+        "state_dim": 6,
+        "writer": "lerobot.datasets.lerobot_dataset.LeRobotDataset",
+        "writer_mode": "uint8"
+      },
+      "fixture_id": "F11_three_group",
+      "generated_by": "fixtures/generate_synthetic.py",
+      "kind": "directory",
+      "notes": "created with the official lerobot==0.4.4 Writer; three independent groups",
+      "path": "fixtures/generate/F11_three_group",
+      "seed": 20261029,
+      "sha256": "611dfa335d84dc00973c7db16182068b86963c181ea0ee4f83421b28a69435e9",
+      "size_bytes": 616303,
+      "status": "generated"
+    }
+  ],
+  "generated_at": "2026-11-02T05:54:05.736972+00:00",
+  "generator": "fixtures/generate_synthetic.py",
+  "schema_version": "fixtures-manifest/1.0",
+  "seed": 20261029
+}

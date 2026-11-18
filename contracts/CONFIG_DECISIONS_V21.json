@@ -1,0 +1,70 @@
+{
+  "spec_version": "2.1.0",
+  "execution_modes": {
+    "offline": {
+      "vlm": "replay",
+      "gpu": false,
+      "satisfies_full_acceptance": false
+    },
+    "live": {
+      "vlm": "dashscope",
+      "gpu": false,
+      "satisfies_full_acceptance": false
+    },
+    "gpu_benchmark": {
+      "vlm": "dashscope",
+      "gpu": true,
+      "satisfies_full_acceptance": true
+    }
+  },
+  "vlm": {
+    "provider": "dashscope_openai_compatible",
+    "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    "model": "qwen2.5-vl-7b-instruct",
+    "max_images_per_clip": 8,
+    "clip_s": 8,
+    "keyframe_fps": 1,
+    "max_side_px": 768,
+    "jpeg_quality": 80,
+    "max_encoded_bytes_per_image": 524288,
+    "max_actions_per_clip": 12,
+    "temperature": 0,
+    "max_output_tokens": 512,
+    "timeout_s": 60,
+    "max_attempts": 3,
+    "concurrency": 2,
+    "budget_usd_per_run": 2.0,
+    "prompt_id": "ego-action-prompt/2.1"
+  },
+  "detector": {
+    "model": "yolo11n",
+    "imgsz": 640,
+    "conf": 0.35,
+    "iou": 0.5,
+    "max_det": 100
+  },
+  "profile_requirements": {
+    "allow_different_state_action_dims": true,
+    "synthetic_profiles": [
+      "arm6_joint_position_v1",
+      "arm7_joint_position_v1"
+    ],
+    "public_profiles": [
+      "agibot_g2_public_v1",
+      "libero_franka_sim_v1"
+    ]
+  },
+  "robot_ready_requires": [
+    "semantic_evidence",
+    "qc_pass_or_explained_warn",
+    "approved_annotation",
+    "source_license",
+    "roundtrip_reader_pass"
+  ],
+  "agent_runtime_required": false,
+  "gpu_performance_modes": [
+    "single_gpu_1_worker",
+    "single_gpu_2_workers",
+    "single_gpu_4_workers"
+  ]
+}

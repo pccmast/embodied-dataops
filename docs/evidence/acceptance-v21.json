@@ -1,0 +1,367 @@
+{
+  "schema_version": "acceptance-report/2.1",
+  "generated_at": "2026-10-30T11:22:46.441954+00:00",
+  "git_sha": "90090eb2339b4dd03b5ff6ee4c2f517b8d31eb32",
+  "status_source": "declared in scripts/acceptance_v21.py and cross-checked against the evidence files; not a live measurement of each item",
+  "environment": {
+    "python": "3.12.13",
+    "platform": "win32",
+    "postgres": {
+      "available": false,
+      "reason": "no TEST_DATABASE_URL/DATABASE_URL configured"
+    },
+    "vlm_provider": "disabled",
+    "cuda": {
+      "available": false,
+      "torch": "2.10.0+cpu",
+      "reason": "torch reports no CUDA device"
+    }
+  },
+  "tests": {
+    "command": "D:\\Embodied_DataOps\\.venv\\Scripts\\python.exe -m pytest tests/v21 -q -p no:cacheprovider --junitxml=D:\\Embodied_DataOps\\reports\\v21\\v21-unit-junit.xml",
+    "exit_code": 0,
+    "junit": "reports/v21/v21-unit-junit.xml",
+    "tests": 210,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "complete_levels": {
+    "CORE_COMPLETE_OFFLINE": false,
+    "DATA_AND_AI_LIVE_COMPLETE": false,
+    "V2.1_FULLY_ACCEPTED": false
+  },
+  "summary": {
+    "total": 28,
+    "counts": {
+      "PARTIAL": 12,
+      "PASS": 8,
+      "BLOCKED": 5,
+      "NOT_RUN": 3
+    },
+    "blocking": [
+      "V21-03",
+      "V21-11",
+      "V21-18",
+      "V21-19",
+      "V21-20",
+      "V21-21",
+      "V21-22",
+      "V21-25"
+    ]
+  },
+  "evidence_problems": [],
+  "items": [
+    {
+      "test_id": "V21-01",
+      "milestone": "M0",
+      "priority": "P0",
+      "title": "V1+V2回归与显式覆盖清单",
+      "status": "PARTIAL",
+      "evidence": [
+        "acceptance/OVERRIDE_MATRIX.csv",
+        "docs/v21-gap-analysis.md"
+      ],
+      "note": "override matrix and gap analysis are in-repo; the full V1/V2 regression could not be re-executed on this host because PostgreSQL is unavailable (the autouse DB fixture in tests/conftest.py requires it)."
+    },
+    {
+      "test_id": "V21-02",
+      "milestone": "M0",
+      "priority": "P0",
+      "title": "来源/许可证/许可审计",
+      "status": "PASS",
+      "evidence": [
+        "reports/v21/source-probe.json",
+        "data/DATA_SOURCES_V21.yaml"
+      ],
+      "note": "probe executed: per-source origin/revision/licence/egress recorded; egress_allowed defaults to false in the manifest and no source is fetched automatically."
+    },
+    {
+      "test_id": "V21-03",
+      "milestone": "M0",
+      "priority": "P0",
+      "title": "真实数据 Profile 探针",
+      "status": "BLOCKED",
+      "evidence": [
+        "reports/v21/source-probe.json"
+      ],
+      "note": "AgiBot and LIBERO snapshots are absent; the probe reports BLOCKED with exit code 3 instead of passing. Profiles are registered so the probe will verify them on fetch."
+    },
+    {
+      "test_id": "V21-04",
+      "milestone": "M1",
+      "priority": "P0",
+      "title": "不等维 RobotProfile",
+      "status": "PARTIAL",
+      "evidence": [
+        "tests/v21/unit/test_profiles_v21.py"
+      ],
+      "note": "unequal dimensions are implemented and tested: libero_franka_sim_v1 is 8/7 and the real locally-verified utokyo snapshot (state[8]/action[7]) resolves through the same profile contract. LIBERO bytes themselves are not present, so V21-04 is not claimed PASS."
+    },
+    {
+      "test_id": "V21-05",
+      "milestone": "M1",
+      "priority": "P0",
+      "title": "AgiBot关节与夹爪单位",
+      "status": "PARTIAL",
+      "evidence": [
+        "tests/v21/unit/test_profiles_v21.py"
+      ],
+      "note": "the schema distinguishes joint/gripper roles and rejects a gripper channel declaring radians; a limits-less profile makes the physics QC NOT_APPLICABLE. The AgiBot channel-to-role mapping cannot be established without meta/agibot_g2_data.json."
+    },
+    {
+      "test_id": "V21-06",
+      "milestone": "M1",
+      "priority": "P0",
+      "title": "原生时间与官方Reader往返",
+      "status": "PARTIAL",
+      "evidence": [
+        "tests/v21/unit/test_clip_planning.py",
+        "tests/v21/unit/test_export_feature_labels.py"
+      ],
+      "note": "native grid indices are preserved by the clip planner; the export feature block now labels state and action channels from separate name lists (the 8/7 case no longer emits 8 labels for a 7-wide action), and the Reader round-trip compares those labels when the reader reports them. A full 8/7 export+read-back still needs PostgreSQL to drive the pipeline."
+    },
+    {
+      "test_id": "V21-07",
+      "milestone": "M2",
+      "priority": "P0",
+      "title": "8s分段1fps抽帧",
+      "status": "PASS",
+      "evidence": [
+        "tests/v21/unit/test_clip_planning.py"
+      ],
+      "note": "8 s half-open clips, 1 fps integer-second keyframes, <=8 frames, trailing sub-second clip kept, 600 s limit enforced; 21 tests."
+    },
+    {
+      "test_id": "V21-08",
+      "milestone": "M2",
+      "priority": "P0",
+      "title": "VLM输出严格Schema",
+      "status": "PASS",
+      "evidence": [
+        "tests/v21/unit/test_vlm_schema.py",
+        "contracts/EGO_ACTION_SCHEMA_V21.json"
+      ],
+      "note": "enum/interval/evidence/extra-key/consistency checks all reject without repair; 26 tests."
+    },
+    {
+      "test_id": "V21-09",
+      "milestone": "M2",
+      "priority": "P0",
+      "title": "VLM replay隔离",
+      "status": "PASS",
+      "evidence": [
+        "tests/v21/unit/test_vlm_governance.py"
+      ],
+      "note": "ReplayProvider needs no network, always reports mode=REPLAY, and its results are never live evidence."
+    },
+    {
+      "test_id": "V21-10",
+      "milestone": "M3",
+      "priority": "P0",
+      "title": "真实YOLO推理",
+      "status": "PASS",
+      "evidence": [
+        "reports/v21/yolo-real.json"
+      ],
+      "note": "real YOLO11n weights on 10 frames decoded from a real public dataset video; weights and source SHA-256 recorded."
+    },
+    {
+      "test_id": "V21-11",
+      "milestone": "M3",
+      "priority": "P0",
+      "title": "真实VLM不少于10片段",
+      "status": "BLOCKED",
+      "evidence": [
+        "reports/v21/vlm-live.json"
+      ],
+      "note": "DASHSCOPE_API_KEY is not present in this environment; a replay run cannot stand in for ten real model responses."
+    },
+    {
+      "test_id": "V21-12",
+      "milestone": "M3",
+      "priority": "P0",
+      "title": "模型异常/预算与外发控制",
+      "status": "PASS",
+      "evidence": [
+        "tests/v21/unit/test_vlm_governance.py",
+        "tests/v21/unit/test_ai_audit_budget.py"
+      ],
+      "note": "401/403/404/422 fatal, 429/5xx/timeout retryable, truncated body retryable, admission happens under a FOR UPDATE lock on the run row after the balance is read, egress is a pre-condition of any call, and a provider failure is no longer relabelled as 'cannot run the async provider' (ProviderError subclasses RuntimeError)."
+    },
+    {
+      "test_id": "V21-13",
+      "milestone": "M3",
+      "priority": "P0",
+      "title": "VLM超时与双副作用",
+      "status": "PARTIAL",
+      "evidence": [
+        "tests/v21/unit/test_vlm_governance.py",
+        "tests/v21/unit/test_ai_audit_budget.py",
+        "alembic/versions/v21_002_ai_inference_and_clips.py",
+        "alembic/versions/v21_004_model_attempt_cost_state.py"
+      ],
+      "note": "at most one committed product is enforced by the (run, clip, provider, model, prompt) unique key plus the lease token; attempts are written through an independent, immediately committed audit session so a rolled-back task cannot erase a call that may have been billed, and `model_call_attempts.cost_state` distinguishes KNOWN / UNKNOWN_UPSTREAM_CHARGE / NOT_BILLED. The DB-level concurrency proof needs PostgreSQL."
+    },
+    {
+      "test_id": "V21-14",
+      "milestone": "M4",
+      "priority": "P0",
+      "title": "动作区间人工修订",
+      "status": "PARTIAL",
+      "evidence": [
+        "src/embodied_dataops/annotations/action_intervals.py",
+        "src/embodied_dataops/api/routes/ai_preannotation.py",
+        "tests/v21/unit/test_action_intervals.py"
+      ],
+      "note": "ACTION_INTERVAL revisions implemented with If-Match CAS, editor/approver separation delegated to the existing decision service, and 12 unit tests; the HTTP/CAS round-trip needs PostgreSQL."
+    },
+    {
+      "test_id": "V21-15",
+      "milestone": "M4",
+      "priority": "P0",
+      "title": "Ego与机器人隔离导出",
+      "status": "PARTIAL",
+      "evidence": [
+        "src/embodied_dataops/datasets/ego_bundle.py",
+        "src/embodied_dataops/api/routes/datasets.py",
+        "tests/v21/unit/test_ego_bundle.py",
+        "tests/v21/unit/test_publish_policy.py"
+      ],
+      "note": "export_kind column + EGO_ANNOTATION_BUNDLE builder with video-redaction policy, route POST /datasets/{id}/ego-bundle-versions, 15 unit tests; robot versions already reject ego episodes, and a FORMAT_VERIFIED profile can only produce a RESEARCH_SNAPSHOT (publish_level is derived and frozen in the manifest). The archive round-trip needs PostgreSQL + object storage."
+    },
+    {
+      "test_id": "V21-16",
+      "milestone": "M4",
+      "priority": "P0",
+      "title": "DatasetVersion不可变",
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/implementation-status.md"
+      ],
+      "note": "V2 already freezes published DatasetVersions and their manifest SHA; the Ego-bundle immutability regression still needs the export split from V21-15."
+    },
+    {
+      "test_id": "V21-17",
+      "milestone": "M5",
+      "priority": "P0",
+      "title": "原子操作并发与故障恢复",
+      "status": "PARTIAL",
+      "evidence": [
+        "alembic/versions/v21_002_ai_inference_and_clips.py",
+        "src/embodied_dataops/workflow/handlers/vlm_preannotate_clip.py"
+      ],
+      "note": "the AI DAG reuses the V1/V2 lease/fence/CAS primitives; one inference per (run, clip, provider, model, prompt) is enforced in code and by a unique key, and a retried task reuses the row instead of creating a second product. The concurrent-worker proof needs PostgreSQL and Redis."
+    },
+    {
+      "test_id": "V21-18",
+      "milestone": "M5",
+      "priority": "P0",
+      "title": "CPU混合负载报告",
+      "status": "NOT_RUN",
+      "evidence": [],
+      "note": "100-episode mixed-load benchmark not executed here."
+    },
+    {
+      "test_id": "V21-19",
+      "milestone": "M5",
+      "priority": "P0",
+      "title": "GPU基准1/2/4进程",
+      "status": "BLOCKED",
+      "evidence": [],
+      "note": "no CUDA device on this host (GPU_BENCH_BLOCKED)."
+    },
+    {
+      "test_id": "V21-20",
+      "milestone": "M5",
+      "priority": "P0",
+      "title": "VLM质量/费用证据",
+      "status": "BLOCKED",
+      "evidence": [],
+      "note": "depends on V21-11 (live VLM calls)."
+    },
+    {
+      "test_id": "V21-21",
+      "milestone": "M5",
+      "priority": "P0",
+      "title": "本地故障演示",
+      "status": "NOT_RUN",
+      "evidence": [],
+      "note": "V2 fault-injection scripts exist; not re-run with the AI DAG."
+    },
+    {
+      "test_id": "V21-22",
+      "milestone": "M5",
+      "priority": "P0",
+      "title": "一键完整演示",
+      "status": "NOT_RUN",
+      "evidence": [],
+      "note": "one-command demo does not cover the AI branch yet."
+    },
+    {
+      "test_id": "V21-23",
+      "milestone": "M6",
+      "priority": "P0",
+      "title": "无Agent完整运行",
+      "status": "PASS",
+      "evidence": [
+        "docs/v21-gap-analysis.md"
+      ],
+      "note": "no module imports or calls a RoboData Agent service; agent_runtime_required=false."
+    },
+    {
+      "test_id": "V21-24",
+      "milestone": "M6",
+      "priority": "P0",
+      "title": "OV矩阵与历史兼容",
+      "status": "PARTIAL",
+      "evidence": [
+        "acceptance/OVERRIDE_MATRIX.csv"
+      ],
+      "note": "new runs select pipeline_version 2.1.0 while existing objects keep 2.0.0; a GET-read regression on a V2 object needs PostgreSQL."
+    },
+    {
+      "test_id": "V21-25",
+      "milestone": "M6",
+      "priority": "P0",
+      "title": "Ego授权或合法替代",
+      "status": "BLOCKED",
+      "evidence": [],
+      "note": "no authorised ego video present; EPIC_EXTERNAL_VERIFIED is NOT_RUN."
+    },
+    {
+      "test_id": "V21-26",
+      "milestone": "M6",
+      "priority": "P0",
+      "title": "数据合规与模型许可",
+      "status": "PARTIAL",
+      "evidence": [
+        "docs/licenses.md"
+      ],
+      "note": "Ultralytics AGPL-3.0 and Qwen2.5-VL usage recorded; no restricted bytes or keys in git. egress_allowed is a NOT NULL DEFAULT false column and both the API and the clip handler refuse a live call without it (SOURCE_EGRESS_NOT_ALLOWED); not exercised against a live provider here."
+    },
+    {
+      "test_id": "V21-27",
+      "milestone": "M6",
+      "priority": "P0",
+      "title": "公开数据与模拟数据隔离",
+      "status": "PARTIAL",
+      "evidence": [
+        "reports/v21/source-probe.json",
+        "data/DATA_SOURCES_V21.yaml"
+      ],
+      "note": "sources carry explicit source_kind/data_origin and the probe keeps real, simulated and fixture data apart; the consolidated report is the gap analysis table."
+    },
+    {
+      "test_id": "V21-28",
+      "milestone": "M6",
+      "priority": "P0",
+      "title": "验收可复现性",
+      "status": "PASS",
+      "evidence": [
+        "reports/acceptance-v21.json"
+      ],
+      "note": "this report: git SHA, python/platform, per-item status, evidence paths and reasons."
+    }
+  ]
+}

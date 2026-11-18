@@ -1,0 +1,119 @@
+{
+  "data_origin": "synthetic",
+  "fixtures": [
+    {
+      "cameras": [
+        "front"
+      ],
+      "episodes": 1,
+      "expected": "canonical-episode/2.0, 6D aligned view valid, QC PASS, export round-trip",
+      "fixture_id": "FV2-01-good-6d",
+      "frames": 100,
+      "kind": "lerobot-v3-directory",
+      "native_rates_hz": {
+        "action": 10,
+        "front": 10,
+        "state": 10
+      },
+      "profile": "arm6_joint_position_v1"
+    },
+    {
+      "cameras": [
+        "front"
+      ],
+      "episodes": 1,
+      "expected": "canonical-episode/2.0, 7D aligned view valid, QC PASS, export round-trip",
+      "fixture_id": "FV2-02-good-7d",
+      "frames": 100,
+      "kind": "lerobot-v3-directory",
+      "native_rates_hz": {
+        "action": 10,
+        "front": 10,
+        "state": 10
+      },
+      "profile": "arm7_joint_position_v1"
+    },
+    {
+      "cameras": [
+        "front",
+        "wrist"
+      ],
+      "duration_s": 10,
+      "episodes": 1,
+      "expected": "native camera indices retained, aligned 10Hz multi-camera view, preview not training truth",
+      "fixture_id": "FV2-03-dual-camera",
+      "kind": "mcap-ros2-profile-v2",
+      "native_rates_hz": {
+        "action": 50,
+        "front": 30,
+        "state": 100,
+        "wrist": 15
+      },
+      "profile": "arm6_joint_position_v1"
+    },
+    {
+      "cases": [
+        "joint_position_out_of_range",
+        "joint_velocity_spike",
+        "clock_offset_unverified",
+        "action_state_lag",
+        "episode_incomplete"
+      ],
+      "expected": "exact qc-policy/2.0 rule codes/severities with evidence",
+      "fixture_id": "FV2-04-semantic-qc",
+      "kind": "synthetic-semantics",
+      "profile": "arm6_joint_position_v1"
+    },
+    {
+      "cases": [
+        "little_endian_organized",
+        "big_endian",
+        "nonzero_field_offset_padding",
+        "truncated_data",
+        "missing_xyz",
+        "over_one_million_points"
+      ],
+      "expected": "bounded parse, POINTCLOUD_* codes, summary statistics, no OOM",
+      "fixture_id": "FV2-05-pointcloud",
+      "kind": "pointcloud2"
+    }
+  ],
+  "profiles": [
+    {
+      "action_dim": 6,
+      "authority": "SYNTHETIC_FIXTURE",
+      "config_sha256": "fbf4621f1eddef024a38b5638dd77332717444d2357a4f9cb42e68c257b68c6c",
+      "joint_names": [
+        "joint_1",
+        "joint_2",
+        "joint_3",
+        "joint_4",
+        "joint_5",
+        "joint_6"
+      ],
+      "profile_id": "arm6_joint_position_v1",
+      "profile_revision": 1,
+      "state_dim": 6
+    },
+    {
+      "action_dim": 7,
+      "authority": "SYNTHETIC_FIXTURE",
+      "config_sha256": "17608f1bcc171cc626d802521ee0f58ff8cecf3a03df9ea55bcd0f8c4221ab4e",
+      "joint_names": [
+        "joint_1",
+        "joint_2",
+        "joint_3",
+        "joint_4",
+        "joint_5",
+        "joint_6",
+        "joint_7"
+      ],
+      "profile_id": "arm7_joint_position_v1",
+      "profile_revision": 1,
+      "state_dim": 7
+    }
+  ],
+  "schema_version": "fixtures-v2-manifest/1.0",
+  "seed": 20261029,
+  "status": "profile-manifest-ready; binary payloads filled by D2-M1/M2/M5"
+}

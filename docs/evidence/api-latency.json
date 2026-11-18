@@ -1,0 +1,28 @@
+{
+  "budget_ms": 300,
+  "concurrency": 10,
+  "dataset_rows": 10000,
+  "generated_at": "2026-11-02T10:29:43.010193+08:00",
+  "machine": {
+    "cpu_count": 32,
+    "database": "PostgreSQL 16 (local service)",
+    "platform": "Linux",
+    "python": "3.11.18"
+  },
+  "max_ms": 375.98,
+  "measurement": "GET /api/v1/episodes?limit=20",
+  "p50_ms": 72.55,
+  "p95_ms": 88.41,
+  "passed": true,
+  "pipeline_create": {
+    "budget_ms": 400,
+    "max_ms": 44.73,
+    "measurement": "POST /api/v1/episodes/{id}/pipeline-runs (DO-A02 If-Match + Idempotency-Key)",
+    "p50_ms": 23.04,
+    "p95_ms": 27.0,
+    "passed": true,
+    "requests": 200
+  },
+  "requests": 500,
+  "_sanitized": "host identifiers replaced; measured values unchanged"
+}
