@@ -7,6 +7,15 @@ review, then freezing reviewed Episodes into immutable dataset versions that are
 exported through the **official LeRobot v3 Writer** and re-opened with the official
 Reader.
 
+[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](pyproject.toml)
+[![OpenAPI 3.1](https://img.shields.io/badge/OpenAPI-3.1-6ba539.svg)](docs/api-openapi.json)
+[![Tests: unit · concurrency · failure · contract](https://img.shields.io/badge/tests-unit%20%C2%B7%20concurrency%20%C2%B7%20failure%20%C2%B7%20contract-informational.svg)](#tests-and-what-they-prove)
+
+<!-- CI badge: enable after the repository exists and Actions has run once.
+[![ci](https://github.com/<owner>/embodied-dataops/actions/workflows/ci.yml/badge.svg)](https://github.com/<owner>/embodied-dataops/actions/workflows/ci.yml)
+-->
+
 > This repository is an engineering prototype. It is **not** a production robot-control
 > system, not a VLA training stack, and it does not claim million-Episode throughput.
 > Synthetic fixtures are always labelled `data_origin=synthetic`; nothing synthetic is
@@ -26,6 +35,107 @@ Reader.
 | Feedback | deterministic evaluation/gap analysis producing collection orders (simulated evaluation clearly flagged) |
 | UI | Streamlit (API-only, four pages); host-run via `make ui`, container image built on Linux/CI (ADR-0010) |
 | Ops | Prometheus metrics, structured JSON logs, Alembic migrations, failure-injection scripts |
+
+## Architecture
+
+One host, one PostgreSQL, one Redis. **PostgreSQL is the only task truth source**; Redis
+carries wakeup hints that may be lost or duplicated without changing the outcome.
+
+```mermaid
+flowchart LR
+  subgraph clients[Clients]
+    UI[Streamlit UI]
+    CLI[dataops CLI]
+  end
+
+  API["FastAPI<br/>REST + RBAC + OpenAPI 3.1"]
+
+  subgraph engine[Task engine]
+    DSP["dispatcher<br/>outbox → streams"]
+    REA["reaper<br/>expire leases · promote retries"]
+    CPU["cpu workers ×2"]
+    VIS["vision worker ×1"]
+    ROS["ros2 worker"]
+  end
+
+  subgraph pg["PostgreSQL — truth source"]
+    T[("tasks · task_dependencies<br/>pipeline_runs · episodes")]
+    OB[("outbox_events")]
+    QR[("quality_reports · findings")]
+    AS[("assets — immutable · SHA-256")]
+  end
+
+  RS[("Redis Streams<br/>wakeup hints only")]
+  S3[("S3-compatible<br/>object store")]
+
+  UI --> API
+  CLI --> API
+  API --> T
+  API --> OB
+  API --> QR
+  DSP --> OB
+  DSP --> RS
+  REA --> T
+  RS --> CPU
+  RS --> VIS
+  RS --> ROS
+  CPU --> T
+  VIS --> T
+  ROS --> T
+  CPU --> AS
+  VIS --> AS
+  ROS --> AS
+  AS --> S3
+```
+
+### Task lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> PENDING
+    PENDING --> RUNNING: claim under FOR UPDATE SKIP LOCKED, attempt += 1, new lease_token
+    RUNNING --> SUCCEEDED: fenced CAS commit, state=RUNNING AND lease_token matches
+    RUNNING --> RETRY_WAIT: lease expired or retryable error
+    RUNNING --> FAILED: attempts exhausted or terminal error
+    RETRY_WAIT --> PENDING: backoff elapsed, reaper writes a fresh outbox row
+    PENDING --> CANCELLED: cancel requested (or parent run failed)
+    RETRY_WAIT --> CANCELLED
+    SUCCEEDED --> [*]
+    FAILED --> [*]
+    CANCELLED --> [*]
+```
+
+### The commit path that makes duplicate delivery harmless
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant W as Worker
+    participant P as PostgreSQL
+    participant R as Redis Stream
+    participant S as Object store
+
+    R->>W: XREADGROUP wakeup {task_id}
+    W->>P: SELECT ... FOR UPDATE SKIP LOCKED
+    P-->>W: lease_token + lease_until = now + 60 s
+    W->>R: XACK (hint consumed, lease is the authority)
+    W->>S: write staging/{task_id}/{lease_token}/...
+    loop every 15 s
+        W->>P: UPDATE tasks SET lease_until = now + 60 s<br/>WHERE state = 'RUNNING' AND lease_token = :token
+        P-->>W: 1 row = still mine, 0 rows = lost it, stop
+    end
+    W->>P: UPDATE ... SET state='SUCCEEDED' WHERE state='RUNNING' AND lease_token=:token
+    alt rowcount = 1
+        P-->>W: committed; next-step task + outbox row in the same transaction
+    else rowcount = 0
+        P-->>W: stale token — roll back this attempt entirely
+    end
+    Note over P: reaper every 10 s moves expired leases to RETRY_WAIT
+```
+
+Three properties follow from this and are proven by tests rather than asserted:
+duplicated wakeups produce one execution, a `kill -9` worker leaves no permanently
+`RUNNING` task, and a stale worker cannot overwrite a newer result.
 
 ## V2 / V2.1 incremental upgrade
 
@@ -73,6 +183,42 @@ demo environment; the one-shot checklist is
 The API is at <http://localhost:8000>, OpenAPI at `/openapi.json` and `/docs`.
 Initial API keys are printed **once** by `make bootstrap` (`scripts/bootstrap.sh`);
 only their SHA-256 digests are stored in PostgreSQL.
+
+## Tests and what they prove
+
+Markers describe **dependencies**, not scope — `-m integration` mixes ordinary flows with
+atomicity checks, so it is not a safety signal on its own.
+
+| Gate | Command | What a green run means |
+|---|---|---|
+| Unit | `uv run pytest -m unit` | pure in-process logic: alignment operators, QC rules and boundaries, state machines, schema validation |
+| **Concurrency** (release gate) | `make test-concurrency` | two real workers competing on real row locks and unique keys: one lease winner, one committed product, no double budget |
+| Failure injection | `uv run pytest tests/failure -q` | duplicate wakeups, `kill -9` recovery inside the lease window, Redis outage, stale-token late commit |
+| Contract | `uv run pytest -m contract` | the export is re-opened by the **official** LeRobot v3 Reader in a separate process |
+| Performance | `make benchmark` | P95 budgets measured and stored in a report; a missed budget fails and is reported as unmet |
+| ROS 2 / real weights | `-m ros2`, `-m vision` | require a Jazzy worker image or downloaded YOLO weights; recorded as `BLOCKED`/`NOT_RUN` when unavailable, never as passed |
+
+Failures of the honest kind are expected output: `docs/implementation-status.md` keeps every
+`PARTIAL`/`BLOCKED`/`NOT_RUN` item visible, and `docs/evidence/` ships the measured numbers
+with the machine and command that produced them.
+
+## Demo
+
+The Streamlit UI is API-only (no direct database access) and has four pages:
+
+1. **Import** — upload a LeRobot `.tar.gz` or an Ego MP4 and watch ingest.
+2. **Pipeline board** — per-step task state, lease owner, retries and cancel.
+3. **Quality review** — findings with evidence, approve/reject with the WARN release note.
+4. **Datasets & feedback** — frozen versions, export status, collection orders.
+
+```bash
+make bootstrap && make up && make seed   # synthetic fixtures land in READY_FOR_REVIEW
+make ui                                  # http://localhost:8501
+```
+
+<!-- Screenshot hook: once a demo host is available, drop four PNGs under docs/images/
+     (import.png, pipeline.png, review.png, datasets.png) and reference them here. Images
+     are not committed while empty, so the README never shows a broken link. -->
 
 ## Repository layout
 
