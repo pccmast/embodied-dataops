@@ -12,9 +12,7 @@ Reader.
 [![OpenAPI 3.1](https://img.shields.io/badge/OpenAPI-3.1-6ba539.svg)](docs/api-openapi.json)
 [![Tests: unit · concurrency · failure · contract](https://img.shields.io/badge/tests-unit%20%C2%B7%20concurrency%20%C2%B7%20failure%20%C2%B7%20contract-informational.svg)](#tests-and-what-they-prove)
 
-<!-- CI badge: enable after the repository exists and Actions has run once.
-[![ci](https://github.com/<owner>/embodied-dataops/actions/workflows/ci.yml/badge.svg)](https://github.com/<owner>/embodied-dataops/actions/workflows/ci.yml)
--->
+[![ci](https://github.com/pccmast/embodied-dataops/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pccmast/embodied-dataops/actions/workflows/ci.yml)
 
 > This repository is an engineering prototype. It is **not** a production robot-control
 > system, not a VLA training stack, and it does not claim million-Episode throughput.
