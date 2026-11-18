@@ -1,6 +1,7 @@
 """训练准备层：TrainingRecipe 合同、来源绑定与规范语义摘要。
 
-对应 `docs/SPEC_TRAINING_PREP_ACT_V1.md`（EDO-TRAIN-PREP-1.1）：
+训练准备层合同（EDO-TRAIN-PREP-1.1 的公开版本；完整内部规格未随仓库发布，见
+`docs/design.md`）：
 
 * §5.2 配方必须是严格 Pydantic 模型，拒绝未知字段，序列化为规范 JSON 后取 SHA-256；
 * §11.1 区分「文件 SHA」与「语义 SHA」，语义摘要使用 ``edo-canonical-json-v1``：

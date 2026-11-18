@@ -42,7 +42,7 @@ Independent run without acceptance wrapper: `pytest -m "not performance and not 
 ## 3. V2 suite
 
 V2 full suite: **245 passed, 0 skipped** (`pytest tests/v2 -q` after DO2-08/13/16/17); details and
-DO2-01..35 honest statuses are in [docs/test-report-v2.md](test-report-v2.md). Overall ceiling:
+DO2-01..35 honest statuses are in the [V2 acceptance matrix](evidence/acceptance-v21.json). Overall ceiling:
 `CORE_COMPLETE_REAL_DATA_BLOCKED` (DO2-30..35 container/GPU/real-load/delivery not run).
 
 ## 4. Reproduce

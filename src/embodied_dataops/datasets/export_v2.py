@@ -43,7 +43,6 @@ from embodied_dataops.canonical.v2.contract import (
 )
 from embodied_dataops.canonical.v2.loader import load_canonical_v2
 from embodied_dataops.canonical.v2.parquet import read_parquet_bytes, validate_aligned_table
-from embodied_dataops.datasets.publish_policy import EXPORT_KIND_RESEARCH
 from embodied_dataops.datasets.manifest import utc_timestamp
 from embodied_dataops.datasets.manifest_v2 import (
     MANIFEST_V2_SCHEMA_VERSION,
@@ -51,6 +50,7 @@ from embodied_dataops.datasets.manifest_v2 import (
     manifest_v2_bytes,
     manifest_v2_sha256,
 )
+from embodied_dataops.datasets.publish_policy import EXPORT_KIND_RESEARCH
 from embodied_dataops.errors import ApiError, ErrorCode
 from embodied_dataops.storage.base import sha256_file
 
