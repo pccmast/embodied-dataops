@@ -12,7 +12,12 @@ Reader.
 [![OpenAPI 3.1](https://img.shields.io/badge/OpenAPI-3.1-6ba539.svg)](docs/api-openapi.json)
 [![Tests: unit · concurrency · failure · contract](https://img.shields.io/badge/tests-unit%20%C2%B7%20concurrency%20%C2%B7%20failure%20%C2%B7%20contract-informational.svg)](#tests-and-what-they-prove)
 
-[![ci](https://github.com/pccmast/embodied-dataops/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pccmast/embodied-dataops/actions/workflows/ci.yml)
+<!-- CI is configured in .github/workflows/ci.yml but disabled in repository settings:
+     the shared runner could not reach PyPI reliably, and a red badge would misrepresent
+     code health. Re-enable with:
+     gh api -X PUT repos/<owner>/embodied-dataops/actions/permissions -F enabled=true
+-->
+
 
 > This repository is an engineering prototype. It is **not** a production robot-control
 > system, not a VLA training stack, and it does not claim million-Episode throughput.
