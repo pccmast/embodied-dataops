@@ -14,6 +14,7 @@ local object store), then drives ``datasets.service.create_version`` /
 
 from __future__ import annotations
 
+import importlib.util
 from pathlib import Path
 
 import pytest
@@ -182,6 +183,10 @@ def _seed_and_create(session, *, profiles: tuple[str, ...]) -> DatasetVersion:
     )
 
 
+@pytest.mark.skipif(
+    importlib.util.find_spec("lerobot") is None,
+    reason="official LeRobot Writer/Reader round-trip requires the pinned lerobot extra",
+)
 def test_v2_create_version_manifest_roundtrip_and_publish(db, storage):
     version = _seed_and_create(db, profiles=("arm6_joint_position_v1",))
     assert version.state == "READY", (version.error_code, version.error_detail)

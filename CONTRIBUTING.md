@@ -57,6 +57,18 @@ atomicity checks; `-m concurrency` is the ~12 cases that actually prove two work
 both win the same lease, budget or unique key. A green integration run says nothing about
 atomicity — run the concurrency gate before claiming a change is safe.
 
+Tests that need a heavy optional dependency are skipped, not silently passed. The export
+round-trip is the main one (the official LeRobot Writer/Reader, ~1 GB of torch):
+
+```bash
+uv sync --extra lerobot
+uv run pytest tests/v2/integration/test_export_v2.py -q   # no longer skipped
+uv run pytest tests/training/unit/test_training_artifact.py -q
+```
+
+CI installs `dev` + `ui` only and reports these as skipped; a skipped test is never counted
+as evidence that the export path works.
+
 ## Definition of done for one work package
 
 1. The code implements the behaviour, not a stub.

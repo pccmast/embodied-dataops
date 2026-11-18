@@ -18,6 +18,7 @@ Flow:
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import tempfile
 from pathlib import Path
 
@@ -213,6 +214,10 @@ def _first_revision(session, storage, annotation_set: AnnotationSet, reviewer_a,
     return created.revision
 
 
+@pytest.mark.skipif(
+    importlib.util.find_spec("lerobot") is None,
+    reason="publishing freezes a manifest built by the official LeRobot Writer",
+)
 def test_published_version_keeps_revision_pointer_manifest_and_digest(db, storage) -> None:
     reviewer_a, _raw_a = make_principal(db, "reviewer", name="snapshot-reviewer-a")
     reviewer_b, _raw_b = make_principal(db, "reviewer", name="snapshot-reviewer-b")
